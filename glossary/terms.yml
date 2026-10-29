@@ -1,0 +1,25 @@
+# Canonical terms of trackIT Systems.
+# One entry per concept. Both languages. Used by people, agents, and (later) generated Vale rules.
+#
+# Fields:
+#   id:          stable key, kebab-case
+#   de / en:     the canonical term per language (same value if not translated)
+#   avoid:       spellings or synonyms we do not use; Vale suggests the canonical term instead
+#   definition:  one sentence, what the term means for us
+#   notes:       optional usage notes
+
+terms:
+  - id: company
+    de: trackIT Systems
+    en: trackIT Systems
+    avoid: [TrackIT Systems, Trackit Systems, trackit systems, TrackIt]
+    definition: The company.
+    notes: >-
+      TODO(brand owner): confirm spelling, and the legal name for imprint and contracts.
+
+  # TODO(brand owner): product and system names, for example:
+  #   - audio analysis device
+  #   - audio analysis platform
+  #   - radio tracking system (VHF)
+  #   - audio annotation platform
+  # and domain terms that drift today (e.g. "recorder" vs. "device" vs. "station").
