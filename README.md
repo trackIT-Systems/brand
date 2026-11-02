@@ -16,8 +16,6 @@ python3 -m http.server 8000   # then open http://localhost:8000/preview/
 
 On every push to `main`, [.github/workflows/pages.yml](.github/workflows/pages.yml) publishes the preview on GitHub Pages. [.github/pages/build.py](.github/pages/build.py) copies the tracked files and the generated tokens, and writes the directory listings the preview needs. The Pages site is public: the styleguide working draft is left out (see `EXCLUDE` in the build script).
 
-TODO(Jonas): enable Pages for the repo (Settings › Pages › Source: GitHub Actions). Needs a public repo or a paid GitHub plan.
-
 ## Contents
 
 | Path | What it is | Status |

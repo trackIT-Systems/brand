@@ -112,7 +112,9 @@
   .round-img { width: 140px; height: 140px; border-radius: 50%; border: 5px solid var(--color-surface-card); background: var(--color-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .round-img img { width: 70%; }
   .radius-demo { display: flex; gap: 16px; flex-wrap: wrap; }
-  .radius-demo div { width: 130px; height: 90px; background: var(--color-border); display: flex; align-items: flex-end; padding: 8px 10px; font-size: 12px; }
+  .radius-demo figure { margin: 0; }
+  .radius-demo .shape { width: 130px; height: 90px; background: var(--color-border); }
+  .radius-demo figcaption { margin-top: 6px; font-size: 12px; }
 
   /* icons */
   .icon-table td { vertical-align: middle; }
@@ -288,7 +290,7 @@ const el = (tag, attrs = {}, ...kids) => {
   for (const k of kids) n.append(k);
   return n;
 };
-const text = (p) => fetch(`${ROOT}/${p}`).then((r) => { if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.text(); });
+const text = (p) => fetch(`${ROOT}/${p}`, { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.text(); });
 const json = (p) => text(p).then(JSON.parse);
 async function listDir(p, { dirs = false } = {}) {
   const html = await text(p);
@@ -377,7 +379,8 @@ async function loadShapes() {
   const t = await json('tokens/shape.tokens.json');
   const px = (v) => typeof v === 'object' ? `${v.value}${v.unit}` : v;
   $('#radius-demo').replaceChildren(...entries(t.radius).map(([k, v]) =>
-    el('div', { style: `border-radius:${px(v.$value)}` }, el('span', { class: 'mono' }, `${k} · ${px(v.$value)}`))));
+    el('figure', {}, el('div', { class: 'shape', style: `border-radius:${px(v.$value)}` }),
+      el('figcaption', { class: 'mono' }, `${k} · ${px(v.$value)}`))));
 }
 
 // ---- logos ----
