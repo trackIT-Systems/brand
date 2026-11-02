@@ -30,7 +30,7 @@ PNG exports in [logo/png/](logo/png/): the same four (transparent; lockup 1500×
 
 | Folder | Typeface | Use |
 |---|---|---|
-| [trackIT-Systems/font](https://github.com/trackIT-Systems/font) (private; clone into `fonts/trackit-systems/`) | trackIT Systems, Bold and Regular (OTF and WOFF2) | Our display font, selected cases only; not published until its license is cleared ([ADR-0009](../docs/adr/0009-own-font-trackit-systems.md)) |
+| [fonts/trackit-systems/](fonts/trackit-systems/) | trackIT Systems, Bold and Regular (OTF and WOFF2) | Our display font, selected cases only ([ADR-0009](../docs/adr/0009-own-font-trackit-systems.md)) |
 
 ## Icons
 

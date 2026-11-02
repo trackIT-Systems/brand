@@ -4,7 +4,7 @@
       "$type": "fontFamily",
       "display": {
         "$value": ["trackIT Systems", "system-ui", "sans-serif"],
-        "$description": "Our display font; selected cases only, never running text. Files: private repo trackIT-Systems/font (ADR-0009)"
+        "$description": "Our display font; selected cases only, never running text. Files: assets/fonts/trackit-systems/ (ADR-0009)"
       },
       "text": {
         "$value": ["system-ui", "-apple-system", "Segoe UI", "sans-serif"],

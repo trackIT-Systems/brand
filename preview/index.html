@@ -5,69 +5,61 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>trackIT Brand Preview</title>
 <link rel="icon" href="../assets/favicon/favicon.ico">
-<!-- Everything shown here is read at runtime from the repo (tokens, assets, glossary, ADRs), so this page cannot drift from the files. -->
+<!-- Everything shown here is read at runtime from the repo (tokens, assets, glossary, ADRs), so this page cannot drift from the files. The page styles itself with the generated dist/tokens.css (npm run build). -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<link rel="stylesheet" href="../dist/tokens.css">
 <style>
-  :root {
-    --c-page: #F5F5F5; --c-text: #222222; --c-heading: #1E5D39; --c-card: #5A7A6B;
-    --c-on-card: #FFFFFF; --c-border: #CBD6CD; --c-cta: #FF6B35; --c-on-cta: #222222;
-    --c-surface: #FFFFFF; --c-surface-subtle: #CBD6CD; --c-link: #1E5D39; --c-accent: #1E5D39; --c-on-accent: #FFFFFF;
-    --c-border-control: #5A7A6B; --c-focus: #1E5D39;
-    --r-card: 24px; --r-control: 16px; --r-pill: 9999px;
-    --f-display: "trackIT Systems", system-ui, sans-serif;
-    --f-text: system-ui, -apple-system, "Segoe UI", sans-serif;
-  }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--c-page); color: var(--c-text);
-    font: 16px/1.55 var(--f-text); }
-  a { color: var(--c-link); text-underline-offset: 2px; }
+  body { margin: 0; background: var(--color-page-background); color: var(--color-text);
+    font: 16px/1.55 var(--font-text); }
+  a { color: var(--color-link); text-underline-offset: 2px; }
   p, li { text-wrap: pretty; }
-  :focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
-  header.top :focus-visible, .card :focus-visible { outline-color: var(--c-on-card); }
-  header.top { background: var(--c-card); color: var(--c-on-card); padding: 40px 16px 32px; }
+  :focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  header.top :focus-visible, .card :focus-visible { outline-color: var(--color-on-surface-card); }
+  header.top { background: var(--color-surface-card); color: var(--color-on-surface-card); padding: 40px 16px 32px; }
   header.top .wrap { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
   header.top img { height: 72px; }
-  header.top h1 { font-family: var(--f-display); font-weight: 700; margin: 0; font-size: clamp(26px, 5vw, 40px); line-height: 1.1; }
+  header.top h1 { font-family: var(--font-display); font-weight: 700; margin: 0; font-size: clamp(26px, 5vw, 40px); line-height: 1.1; }
   header.top p { margin: 4px 0 0; }
   .wrap { max-width: 1160px; margin: 0 auto; }
-  nav.toc { position: sticky; top: 0; z-index: 5; background: var(--c-page); border-bottom: 1px solid var(--c-border); padding: 0 16px; }
+  nav.toc { position: sticky; top: 0; z-index: 5; background: var(--color-page-background); border-bottom: 1px solid var(--color-border); padding: 0 16px; }
   nav.toc .wrap { display: flex; gap: 4px 16px; flex-wrap: wrap; padding: 10px 0; font-size: 14px; }
-  nav.toc a { text-decoration: none; color: var(--c-text); }
-  nav.toc a:hover { color: var(--c-heading); text-decoration: underline; }
+  nav.toc a { text-decoration: none; color: var(--color-text); }
+  nav.toc a:hover { color: var(--color-heading); text-decoration: underline; }
   main { padding: 0 16px 64px; }
   section { padding-top: 48px; }
-  h2 { color: var(--c-heading); font-size: 26px; margin: 0 0 4px; }
-  h3 { color: var(--c-heading); font-size: 18px; margin: 28px 0 8px; }
+  h2 { color: var(--color-heading); font-size: 26px; margin: 0 0 4px; }
+  h3 { color: var(--color-heading); font-size: 18px; margin: 28px 0 8px; }
   .lead { margin: 0 0 20px; max-width: 72ch; }
   .src { font-size: 13px; }
   code, .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; }
-  .banner { background: var(--c-surface); border: 2px solid var(--c-border-control); border-radius: var(--r-control); padding: 12px 16px; margin: 24px 0 0; }
+  .banner { background: var(--color-surface); border: 2px solid var(--color-border-control); border-radius: var(--radius-control); padding: 12px 16px; margin: 24px 0 0; }
   .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); }
-  .panel { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-control); padding: 16px; }
+  .panel { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: 16px; }
   .scroll { overflow-x: auto; }
-  .scroll:has(> table):not(.bare) { border: 1px solid var(--c-border); border-radius: var(--r-control); }
-  table { border-collapse: collapse; width: 100%; background: var(--c-surface); font-size: 14px; }
-  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--c-border); vertical-align: top; }
-  th { background: var(--c-surface-subtle); color: var(--c-text); font-weight: 600; }
+  .scroll:has(> table):not(.bare) { border: 1px solid var(--color-border); border-radius: var(--radius-control); }
+  table { border-collapse: collapse; width: 100%; background: var(--color-surface); font-size: 14px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  th { background: var(--color-surface-subtle); color: var(--color-text); font-weight: 600; }
   tbody tr:last-child > * { border-bottom: 0; }
 
   /* colors */
-  .swatch { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-control); overflow: hidden; }
-  .swatch .chip { height: 84px; border-bottom: 1px solid var(--c-border); }
+  .swatch { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); overflow: hidden; }
+  .swatch .chip { height: 84px; border-bottom: 1px solid var(--color-border); }
   .swatch .body { padding: 10px 12px; font-size: 14px; }
   .swatch .name { font-weight: 600; }
   .swatch .roles { font-size: 13px; margin-top: 6px; }
   .contrast td.cell { text-align: center; font-weight: 600; white-space: nowrap; min-width: 92px; }
-  th.row-head { background: var(--c-surface); color: var(--c-heading); }
-  .contrast td.same { background: var(--c-page); }
-  .contrast .verdict { display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; padding: 1px 8px; border-radius: var(--r-pill);
-    background: var(--c-surface); color: var(--c-text); font-size: 12px; font-weight: 600; }
-  .contrast td.approved { box-shadow: inset 0 0 0 3px var(--c-surface), inset 0 0 0 5px var(--c-text); }
-  .contrast td.approved .verdict { background: var(--c-text); color: var(--c-surface); }
+  th.row-head { background: var(--color-surface); color: var(--color-heading); }
+  .contrast td.same { background: var(--color-page-background); }
+  .contrast .verdict { display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; padding: 1px 8px; border-radius: var(--radius-pill);
+    background: var(--color-surface); color: var(--color-text); font-size: 12px; font-weight: 600; }
+  .contrast td.approved { box-shadow: inset 0 0 0 3px var(--color-surface), inset 0 0 0 5px var(--color-text); }
+  .contrast td.approved .verdict { background: var(--color-text); color: var(--color-surface); }
   .pairs { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr)); margin-bottom: 16px; }
   .pair .demo.link { text-decoration: underline; text-underline-offset: 2px; }
-  .pair { border-radius: var(--r-control); border: 1px solid var(--c-border); overflow: hidden; background: var(--c-surface); }
+  .pair { border-radius: var(--radius-control); border: 1px solid var(--color-border); overflow: hidden; background: var(--color-surface); }
   .pair .demo { padding: 14px 16px; font-size: 17px; font-weight: 600; }
   .pair .demo small { display: block; font-size: 14px; font-weight: 400; }
   .pair .meta { padding: 8px 16px; font-size: 13px; }
@@ -75,67 +67,67 @@
   /* logos */
   .logo-row { display: grid; grid-template-columns: 220px repeat(var(--n), minmax(110px, 1fr)); gap: 8px; align-items: stretch; margin-bottom: 8px; min-width: calc(220px + var(--n) * 118px); }
   .logo-row .label { font-size: 13px; align-self: center; }
-  .logo-tile { position: relative; border-radius: var(--r-control); border: 1px solid var(--c-border); height: 110px; display: flex; align-items: center; justify-content: center; padding: 22px 10px 10px; }
+  .logo-tile { position: relative; border-radius: var(--radius-control); border: 1px solid var(--color-border); height: 110px; display: flex; align-items: center; justify-content: center; padding: 22px 10px 10px; }
   .logo-tile img { max-width: 100%; max-height: 100%; }
   .logo-tile.no img { opacity: .3; }
-  .logo-tile .tag { position: absolute; top: 6px; left: 6px; display: inline-flex; align-items: center; gap: 3px; padding: 0 7px; border-radius: var(--r-pill);
-    background: var(--c-surface); color: var(--c-text); font-size: 11px; font-weight: 600; line-height: 18px; }
-  .logo-tile.ok .tag { background: var(--c-text); color: var(--c-surface); }
+  .logo-tile .tag { position: absolute; top: 6px; left: 6px; display: inline-flex; align-items: center; gap: 3px; padding: 0 7px; border-radius: var(--radius-pill);
+    background: var(--color-surface); color: var(--color-text); font-size: 11px; font-weight: 600; line-height: 18px; }
+  .logo-tile.ok .tag { background: var(--color-text); color: var(--color-surface); }
   .logo-head { font-size: 12px; text-align: center; align-self: end; }
 
   /* type */
   .type-controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
-  .type-controls input[type=text] { flex: 1 1 260px; padding: 8px 12px; border: 1px solid var(--c-border-control); border-radius: var(--r-control); font: inherit; background: var(--c-surface); }
-  .type-spec { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-control); padding: 16px 20px; margin-bottom: 12px; }
+  .type-controls input[type=text] { flex: 1 1 260px; padding: 8px 12px; border: 1px solid var(--color-border-control); border-radius: var(--radius-control); font: inherit; background: var(--color-surface); }
+  .type-spec { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: 16px 20px; margin-bottom: 12px; }
   .type-spec .meta { font-size: 13px; margin-bottom: 8px; }
-  .type-spec .meta b { color: var(--c-heading); }
+  .type-spec .meta b { color: var(--color-heading); }
   .type-spec .big { font-size: clamp(32px, 6vw, 56px); line-height: 1.1; overflow-wrap: anywhere; }
   .type-spec .mid { font-size: 24px; line-height: 1.25; margin-top: 8px; }
   .type-spec .small { font-size: 16px; margin-top: 8px; overflow-wrap: anywhere; }
 
   /* components */
-  .card { background: var(--c-card); color: var(--c-on-card); border-radius: var(--r-card); padding: 24px 28px; }
+  .card { background: var(--color-surface-card); color: var(--color-on-surface-card); border-radius: var(--radius-card); padding: 24px 28px; }
   .card h3 { color: inherit; margin: 0 0 8px; letter-spacing: .02em; text-transform: uppercase; font-size: 17px; }
   .card ul { margin: 0; padding-left: 20px; }
-  .pill { display: inline-block; background: var(--c-accent); color: var(--c-on-accent); border-radius: var(--r-pill); padding: 6px 16px; font-weight: 600; }
+  .pill { display: inline-block; background: var(--color-accent); color: var(--color-on-accent); border-radius: var(--radius-pill); padding: 6px 16px; font-weight: 600; }
   /* buttons: hover and pressed move the fill away from the label color (15% / 30%), see DESIGN.md */
-  .btn { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; border: 2px solid transparent; border-radius: var(--r-control); padding: 11px 22px; font: 600 15px/1.2 var(--f-text); cursor: pointer; }
-  .btn.primary { --fill: var(--c-cta); --away: var(--c-surface); background: var(--fill); color: var(--c-on-cta); }
-  .btn.secondary { --fill: var(--c-accent); --away: var(--c-text); background: var(--fill); color: var(--c-on-accent); }
-  .btn.container { --fill: var(--c-card); --away: var(--c-text); background: var(--fill); color: var(--c-on-card); }
+  .btn { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; border: 2px solid transparent; border-radius: var(--radius-control); padding: 11px 22px; font: 600 15px/1.2 var(--font-text); cursor: pointer; }
+  .btn.primary { --fill: var(--color-cta); --away: var(--color-surface); background: var(--fill); color: var(--color-on-cta); }
+  .btn.secondary { --fill: var(--color-accent); --away: var(--color-text); background: var(--fill); color: var(--color-on-accent); }
+  .btn.container { --fill: var(--color-surface-card); --away: var(--color-text); background: var(--fill); color: var(--color-on-surface-card); }
   :is(.btn.primary, .btn.secondary, .btn.container):is(:hover, .is-hover):not(:disabled) { background: color-mix(in srgb, var(--fill) 85%, var(--away)); }
   :is(.btn.primary, .btn.secondary, .btn.container):is(:active, .is-active):not(:disabled) { background: color-mix(in srgb, var(--fill) 70%, var(--away)); }
-  .btn.outline { background: transparent; color: var(--c-accent); border-color: var(--c-accent); }
-  .btn.outline:is(:hover, .is-hover):not(:disabled) { background: var(--c-surface-subtle); }
-  .btn.outline:is(:active, .is-active):not(:disabled) { background: var(--c-accent); color: var(--c-on-accent); }
-  .card .btn.outline { color: var(--c-on-card); border-color: var(--c-on-card); }
-  .card .btn.outline:is(:hover, .is-hover) { background: color-mix(in srgb, var(--c-on-card) 15%, transparent); }
-  .card .btn.outline:is(:active, .is-active) { background: color-mix(in srgb, var(--c-on-card) 30%, transparent); }
-  .btn:disabled { background: var(--c-surface-subtle); color: var(--c-card); border-color: transparent; cursor: not-allowed; }
+  .btn.outline { background: transparent; color: var(--color-accent); border-color: var(--color-accent); }
+  .btn.outline:is(:hover, .is-hover):not(:disabled) { background: var(--color-surface-subtle); }
+  .btn.outline:is(:active, .is-active):not(:disabled) { background: var(--color-accent); color: var(--color-on-accent); }
+  .card .btn.outline { color: var(--color-on-surface-card); border-color: var(--color-on-surface-card); }
+  .card .btn.outline:is(:hover, .is-hover) { background: color-mix(in srgb, var(--color-on-surface-card) 15%, transparent); }
+  .card .btn.outline:is(:active, .is-active) { background: color-mix(in srgb, var(--color-on-surface-card) 30%, transparent); }
+  .btn:disabled { background: var(--color-surface-subtle); color: var(--color-surface-card); border-color: transparent; cursor: not-allowed; }
   .btn-states td, .btn-states th { vertical-align: middle; }
-  th .src { font-weight: 400; color: var(--c-text); }
+  th .src { font-weight: 400; color: var(--color-text); }
   .card .btn-row { margin-top: 18px; }
   .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-  .round-img { width: 140px; height: 140px; border-radius: 50%; border: 5px solid var(--c-card); background: var(--c-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .round-img { width: 140px; height: 140px; border-radius: 50%; border: 5px solid var(--color-surface-card); background: var(--color-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .round-img img { width: 70%; }
   .radius-demo { display: flex; gap: 16px; flex-wrap: wrap; }
-  .radius-demo div { width: 130px; height: 90px; background: var(--c-border); display: flex; align-items: flex-end; padding: 8px 10px; font-size: 12px; }
+  .radius-demo div { width: 130px; height: 90px; background: var(--color-border); display: flex; align-items: flex-end; padding: 8px 10px; font-size: 12px; }
 
   /* icons */
   .icon-table td { vertical-align: middle; }
-  .icon-table svg { display: inline-block; vertical-align: middle; margin-right: 10px; color: var(--c-text); }
-  .icon-on-card { background: var(--c-card); color: var(--c-on-card); border-radius: var(--r-control); padding: 6px 10px; display: inline-flex; gap: 10px; }
-  .icon-on-card svg { color: var(--c-on-card); margin: 0; }
+  .icon-table svg { display: inline-block; vertical-align: middle; margin-right: 10px; color: var(--color-text); }
+  .icon-on-card { background: var(--color-surface-card); color: var(--color-on-surface-card); border-radius: var(--radius-control); padding: 6px 10px; display: inline-flex; gap: 10px; }
+  .icon-on-card svg { color: var(--color-on-surface-card); margin: 0; }
 
   /* docs */
-  details.doc { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-control); margin-bottom: 10px; }
-  details.doc summary { cursor: pointer; padding: 12px 16px; font-weight: 600; color: var(--c-heading); }
+  details.doc { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); margin-bottom: 10px; }
+  details.doc summary { cursor: pointer; padding: 12px 16px; font-weight: 600; color: var(--color-heading); }
   details.doc .md { padding: 0 20px 16px; overflow-x: auto; }
-  .status { display: inline-block; border-radius: var(--r-pill); padding: 1px 10px; font-size: 12px; font-weight: 600; }
-  .status.Accepted { background: var(--c-accent); color: var(--c-on-accent); }
-  .status.Proposed { background: var(--c-border); color: var(--c-heading); }
-  .status.other { background: var(--c-page); border: 1px solid var(--c-border-control); }
-  .todo-owner { font-weight: 600; color: var(--c-heading); margin-top: 14px; }
+  .status { display: inline-block; border-radius: var(--radius-pill); padding: 1px 10px; font-size: 12px; font-weight: 600; }
+  .status.Accepted { background: var(--color-accent); color: var(--color-on-accent); }
+  .status.Proposed { background: var(--color-border); color: var(--color-heading); }
+  .status.other { background: var(--color-page-background); border: 1px solid var(--color-border-control); }
+  .todo-owner { font-weight: 600; color: var(--color-heading); margin-top: 14px; }
   .todo-list { margin: 4px 0 0; padding-left: 20px; font-size: 14px; max-width: 65ch; }
   .todo-list .src { margin-left: 6px; }
   footer { padding: 24px 16px; font-size: 13px; text-align: center; }
@@ -163,9 +155,14 @@
     <code>python3 -m http.server 8000</code> and open <a href="http://localhost:8000/preview/">http://localhost:8000/preview/</a>.
   </div>
 
+  <div id="build-warning" class="banner" hidden>
+    The generated tokens are missing, so this page shows without brand colors. From the brand repo root run
+    <code>npm install</code> and <code>npm run build</code>, then reload.
+  </div>
+
   <section id="colors">
     <h2>Colors</h2>
-    <p class="lead">Palette and the roles each color plays. Code uses roles, never palette values directly.</p>
+    <p class="lead">Palette and the roles each color plays. Code uses roles where one fits.</p>
     <div class="grid" id="palette"></div>
     <h3>Roles</h3>
     <div class="scroll"><table id="roles"><thead><tr><th>Role</th><th>Color</th><th>Use</th></tr></thead><tbody></tbody></table></div>
@@ -174,7 +171,7 @@
 
   <section id="contrast">
     <h2>Contrast</h2>
-    <p class="lead">Approved text and background pairs, taken from the color roles: <code>text</code>, <code>heading</code> and <code>link</code> on <code>page-background</code> and <code>surface</code>, and each <code>on-X</code> on its <code>X</code>. Use these; other pairs are not approved, even when their contrast passes.</p>
+    <p class="lead">Approved text and background pairs, taken from the color roles: <code>text</code>, <code>heading</code> and <code>link</code> on <code>page-background</code>, <code>surface</code> and <code>surface-subtle</code>, and each <code>on-X</code> on its <code>X</code>. Use these; other pairs are not approved, even when their contrast passes.</p>
     <div class="pairs" id="pairs"></div>
     <details class="doc">
       <summary>All combinations of the palette (for checking, not for use)</summary>
@@ -201,13 +198,13 @@
 
   <section id="type">
     <h2>Typography</h2>
-    <p class="lead">Display: our own font trackIT Systems in Bold and Regular (ADR-0009), for selected cases only. Files in the private repo trackIT-Systems/font; fallback fonts where they are missing. Text typeface not chosen yet (placeholder shown).</p>
+    <p class="lead">Display: our own font trackIT Systems in Bold and Regular (ADR-0009), for selected cases only. Files in assets/fonts/trackit-systems/. Text typeface not chosen yet (placeholder shown).</p>
     <div class="type-controls">
       <input type="text" id="type-sample" value="trackIT systems" aria-label="Sample text">
       <label><input type="checkbox" id="type-upper"> uppercase</label>
     </div>
     <div id="type-in-use"></div>
-    <p class="src">Source: <a href="../tokens/typography.tokens.json">tokens/typography.tokens.json</a>, <a href="https://github.com/trackIT-Systems/font">trackIT-Systems/font</a></p>
+    <p class="src">Source: <a href="../tokens/typography.tokens.json">tokens/typography.tokens.json</a>, <a href="../assets/fonts/trackit-systems/">assets/fonts/trackit-systems/</a></p>
   </section>
 
   <section id="components">
@@ -306,6 +303,7 @@ async function walk(dir = '') {
 const fail = (target, err) => target.replaceChildren(el('p', { class: 'src' }, `Could not load: ${err.message}`));
 
 if (location.protocol === 'file:') $('#file-warning').hidden = false;
+if (!getComputedStyle(document.documentElement).getPropertyValue('--color-text')) $('#build-warning').hidden = false;
 
 // ---- tokens ----
 function resolve(tokens, v) {
@@ -327,12 +325,6 @@ async function loadColors() {
   PALETTE = entries(t.color.palette).map(([k, v]) => ({ id: k, hex: v.$value.toUpperCase(), desc: v.$description }));
   const roles = entries(t.color.role).map(([k, v]) => ({ id: k, ref: v.$value, hex: resolve(t, v.$value).toUpperCase(), desc: v.$description }));
 
-  // apply roles to this page, so the page itself follows the tokens
-  const css = { 'page-background': '--c-page', surface: '--c-surface', 'surface-subtle': '--c-surface-subtle', text: '--c-text',
-    heading: '--c-heading', link: '--c-link', accent: '--c-accent',
-    'surface-card': '--c-card', 'on-surface-card': '--c-on-card', 'on-accent': '--c-on-accent', border: '--c-border',
-    'border-control': '--c-border-control', 'focus-ring': '--c-focus', cta: '--c-cta', 'on-cta': '--c-on-cta' };
-  for (const r of roles) if (css[r.id]) document.documentElement.style.setProperty(css[r.id], r.hex);
 
   $('#palette').replaceChildren(...PALETTE.map((p) => {
     const used = roles.filter((r) => r.ref === `{color.palette.${p.id}}`).map((r) => r.id);
@@ -346,7 +338,7 @@ async function loadColors() {
   }));
   $('#roles tbody').replaceChildren(...roles.map((r) => el('tr', {},
     el('td', { class: 'mono' }, r.id),
-    el('td', {}, el('span', { style: `display:inline-block;width:18px;height:18px;border-radius:5px;vertical-align:middle;margin-right:8px;border:1px solid var(--c-border-control);background:${r.hex}` }),
+    el('td', {}, el('span', { style: `display:inline-block;width:18px;height:18px;border-radius:5px;vertical-align:middle;margin-right:8px;border:1px solid var(--color-border-control);background:${r.hex}` }),
       el('span', { class: 'mono' }, r.ref.replace(/[{}]/g, '').replace('color.palette.', ''))),
     el('td', {}, r.desc || ''))));
 
@@ -383,7 +375,6 @@ async function loadColors() {
 async function loadShapes() {
   const t = await json('tokens/shape.tokens.json');
   const px = (v) => typeof v === 'object' ? `${v.value}${v.unit}` : v;
-  for (const [k, v] of entries(t.radius)) document.documentElement.style.setProperty(`--r-${k}`, px(v.$value));
   $('#radius-demo').replaceChildren(...entries(t.radius).map(([k, v]) =>
     el('div', { style: `border-radius:${px(v.$value)}` }, el('span', { class: 'mono' }, `${k} · ${px(v.$value)}`))));
 }
@@ -422,10 +413,7 @@ async function loadLogos() {
 const fontUrl = (file) => `url("${ROOT}/assets/fonts/trackit-systems/woff2/${encodeURIComponent(file)}.woff2")`;
 async function loadType() {
   const t = await json('tokens/typography.tokens.json');
-  const stack = (v) => v.$value.map((f) => /\s/.test(f) ? `"${f}"` : f).join(', ');
   const display = t.font.family.display.$value[0];
-  document.documentElement.style.setProperty('--f-display', stack(t.font.family.display));
-  document.documentElement.style.setProperty('--f-text', stack(t.font.family.text));
   // the display family as the web will use it: one family, weights from the tokens
   const inUse = entries(t.font.weight).map(([k, v]) => ({ token: k, weight: v.$value, desc: v.$description,
     file: `${display} ${v.$value >= 700 ? 'Bold' : 'Regular'}` }));
@@ -435,8 +423,8 @@ async function loadType() {
     const sample = $('#type-sample').value || 'trackIT systems';
     const upper = $('#type-upper').checked ? 'text-transform:uppercase;' : '';
     $('#type-in-use').replaceChildren(
-      ...inUse.map((s) => el('div', { class: 'type-spec', style: `font-family:var(--f-display);font-weight:${s.weight};${upper}` },
-        el('div', { class: 'meta', style: 'font-family:var(--f-text);text-transform:none' },
+      ...inUse.map((s) => el('div', { class: 'type-spec', style: `font-family:var(--font-display);font-weight:${s.weight};${upper}` },
+        el('div', { class: 'meta', style: 'font-family:var(--font-text);text-transform:none' },
           el('b', {}, s.file), ` · weight ${s.weight} · `, el('span', { class: 'mono' }, `font.family.display + font.weight.${s.token}`), ` · ${s.desc}`),
         el('div', { class: 'big' }, sample),
         el('div', { class: 'mid' }, 'Akustisches Monitoring für Fledermäuse und Vögel'),
@@ -446,7 +434,7 @@ async function loadType() {
         el('div', { class: 'meta' }, el('b', {}, 'Typeset vs. logo'), ' · letter-spacing 0.028em (Bold) and 0.04em (Regular), as measured in the wordmark · always use the logo files for the logo'),
         el('div', { style: 'display:flex;gap:32px;align-items:center;flex-wrap:wrap' },
           el('img', { src: `${ROOT}/assets/logo/trackit-logo-black.svg`, alt: 'trackIT systems logo', style: 'height:120px' }),
-          el('div', { style: 'font-family:var(--f-display);line-height:1;text-align:right' },
+          el('div', { style: 'font-family:var(--font-display);line-height:1;text-align:right' },
             el('div', { style: 'font-weight:700;font-size:56px;letter-spacing:.028em' }, 'trackIT'),
             el('div', { style: 'font-weight:400;font-size:37px;letter-spacing:.04em' }, 'systems')))),
       el('div', { class: 'type-spec' },
