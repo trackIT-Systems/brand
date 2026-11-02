@@ -2,5 +2,5 @@
 node_modules/
 dist/
 
-# trackIT Systems font: separate private repo (trackIT-Systems/font), cloned here for the preview
-assets/fonts/trackit-systems/
+# Font source files stay in the private font repo (ADR-0009)
+assets/fonts/**/source/

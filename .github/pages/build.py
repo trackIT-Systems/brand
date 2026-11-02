@@ -3,7 +3,8 @@
 The preview (preview/index.html) discovers files by reading directory listings,
 as served by `python3 -m http.server`. GitHub Pages serves no listings, so this
 script writes an index.html with the same kind of listing into every directory.
-The site root redirects to the preview.
+The site root redirects to the preview. The generated tokens in dist/ are
+not tracked, so run `npm run build` first; this script copies them too.
 
 Usage: python3 .github/pages/build.py <output dir>
 """
@@ -28,6 +29,13 @@ def tracked_files(repo: Path) -> list[str]:
     return sorted(f for f in out.decode().split("\0") if f and not f.startswith(EXCLUDE))
 
 
+def generated_files(repo: Path) -> list[str]:
+    dist = repo / "dist"
+    if not (dist / "tokens.css").exists():
+        sys.exit("dist/tokens.css is missing: run `npm run build` first")
+    return sorted(str(f.relative_to(repo)) for f in dist.rglob("*") if f.is_file())
+
+
 def listing(entries: list[str], head: str = "") -> str:
     links = "\n".join(f'<li><a href="{html.escape(e, quote=True)}">{html.escape(e)}</a></li>' for e in entries)
     return f'<!doctype html>\n<html><head><meta charset="utf-8">{head}<title>Index</title></head>\n<body><ul>\n{links}\n</ul></body></html>\n'
@@ -37,7 +45,7 @@ def main(out: Path) -> None:
     repo = Path(__file__).resolve().parents[2]
     if out.exists():
         shutil.rmtree(out)
-    files = tracked_files(repo)
+    files = tracked_files(repo) + generated_files(repo)
 
     children: dict[str, set[str]] = {"": set()}
     for f in files:

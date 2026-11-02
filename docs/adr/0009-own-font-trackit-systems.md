@@ -19,12 +19,15 @@ We use our own font, **trackIT Systems**, with two styles:
 
 Both styles form one family, `font-family: "trackIT Systems"`. Its use stays as before: a display font for selected cases, not for running text.
 
-The font is built and kept in the private repo [trackIT-Systems/font](https://github.com/trackIT-Systems/font). Its origin, license and build live there, not in this repo.
+trackIT Systems is based on a commercial font, modified with the permission of its foundry. It may be used in this repo and in public.
+
+- The built files (`otf/`, `woff2/`) live in [assets/fonts/trackit-systems/](../../assets/fonts/trackit-systems/), with a README on use and license. They are published with everything else: the brand preview and the releases ([ADR-0010](0010-releases-on-github.md)).
+- The font is built in the private repo [trackIT-Systems/font](https://github.com/trackIT-Systems/font), which also holds its origin, license and the source files. Those stay private. A new build is copied here by pull request.
 
 ## Consequences
 
-- Typeset headlines match the logo.
+- Typeset headlines match the logo, on the websites and in the public preview.
 - `font.family.display` is `trackIT Systems`.
-- The font files are not in this repo and not on the public preview. To see the font in the local preview, clone the font repo into `assets/fonts/trackit-systems/` (ignored here).
-- The font is not published on websites until its license is cleared; see the font repo.
+- The files here are copies: after a change in the font repo, copy the new build here.
+- Source files and the name of the original font stay out of this public repo; `.gitignore` blocks `source/` folders under `assets/fonts/`.
 - This leaves the text font (body text, UI, data) open.

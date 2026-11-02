@@ -1,0 +1,41 @@
+name: Release
+
+# Pushing a tag vX.Y.Z on main publishes a GitHub release with the npm package
+# and a ZIP of the same files (ADR-0010).
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tag is on main and matches package.json
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || { echo "Tag $GITHUB_REF_NAME is not on main"; exit 1; }
+          version=$(node -p 'require("./package.json").version')
+          [ "v$version" = "$GITHUB_REF_NAME" ] || { echo "Tag $GITHUB_REF_NAME does not match package.json version $version"; exit 1; }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run check
+      - name: Package
+        run: |
+          mkdir release
+          npm pack --pack-destination release
+          name=$(basename release/*.tgz .tgz)
+          tar -xzf "release/$name.tgz" -C release
+          (cd release && mv package "$name" && zip -qr "$name.zip" "$name")
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" release/*.tgz release/*.zip --title "$GITHUB_REF_NAME" --generate-notes

@@ -1,0 +1,20 @@
+{
+  "name": "@trackit-systems/brand",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist/",
+    "assets/",
+    "DESIGN.md",
+    "VOICE.md",
+    "glossary/"
+  ],
+  "scripts": {
+    "build": "node tokens/build.js",
+    "check": "node tokens/check.js"
+  },
+  "devDependencies": {
+    "style-dictionary": "5.6.1"
+  }
+}

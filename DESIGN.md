@@ -28,7 +28,7 @@ Rules:
 
 - Signal orange marks the one primary action in view. Large areas and decorative cards stay green or neutral.
 - Dark-green is for type and small elements: headings, links, product badges, secondary buttons. Large areas use slate-green (content boxes, page headers, bands) or mint (`surface-subtle`: table headers, highlighted rows). Otherwise dark-green is everywhere and stops pointing at anything.
-- Text on slate-green and dark-green is white (`white`, not `soft-white`: soft-white on slate-green is 4.30:1 and fails for body text). Dark-green text on slate-green is unreadable (1.65:1); dark-gray reaches 3.36:1, large text only.
+- Text on slate-green and dark-green is white (`white`, not `soft-white`: soft-white on slate-green is 4.35:1 and fails for body text). Dark-green text on slate-green is unreadable (1.65:1); dark-gray reaches 3.36:1, large text only.
 - Secondary text (captions, sources, metadata) is dark-gray in a smaller size. No other palette color reaches 4.5:1 on soft-white; slate-green is 4.35:1.
 - Links are dark-green and always underlined, so they differ from headings in the same color.
 - Panels on the page background (tables, forms) are white (`surface`). Subtle bases inside them are mint (`surface-subtle`), with dark-gray or dark-green text.
@@ -47,7 +47,7 @@ Which text color goes on which background is defined by the roles in [tokens/col
 | dark-gray on soft-white | 14.59:1 | AAA |
 | dark-green on mint | 5.24:1 | AA |
 | slate-green on soft-white | 4.35:1 | large text only |
-| soft-white on slate-green | 4.30:1 | large text only; use white |
+| soft-white on slate-green | 4.35:1 | large text only; use white |
 | dark-gray on slate-green | 3.36:1 | large text only; use white |
 | **white on signal-orange** | **2.84:1** | **fails**, also for large bold text (needs 3:1) |
 | dark-gray on signal-orange | 5.61:1 | AA |
@@ -87,7 +87,7 @@ States, without extra colors:
 
 ### trackIT Systems: our display font, selected cases
 
-Our display font is **trackIT Systems**, a font of our own in two styles ([ADR-0009](docs/adr/0009-own-font-trackit-systems.md)). It is a display face, used only in selected cases, not for running text. Files, build and status are in the private repo [trackIT-Systems/font](https://github.com/trackIT-Systems/font); clone it into `assets/fonts/trackit-systems/` to see the font in the preview.
+Our display font is **trackIT Systems**, a font of our own in two styles ([ADR-0009](docs/adr/0009-own-font-trackit-systems.md)). It is a display face, used only in selected cases, not for running text. Files and license: [assets/fonts/trackit-systems/](assets/fonts/trackit-systems/).
 
 | Token | Style | File | Weight | Matches |
 |---|---|---|---|---|
