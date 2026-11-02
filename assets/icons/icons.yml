@@ -1,0 +1,19 @@
+# Which icon stands for which concept.
+# Icon set: Tabler Icons (https://tabler.io/icons), see docs/adr/0006-tabler-icons.md.
+# Add a concept here before using a new icon, so the same concept always gets the same icon.
+#
+# Fields:
+#   id:       concept, kebab-case; use glossary term ids where one exists
+#   tabler:   icon name as on tabler.io (without "icon-" prefix)
+#   notes:    optional
+
+icons:
+  # TODO(Nicole): fill from real use. Candidates to check against the glossary:
+  # - audio recording        -> microphone
+  # - radio tracking (VHF)   -> antenna / radar
+  # - analysis platform      -> chart-dots / server
+  # - annotation             -> tag / pencil
+  # - contact, newsletter    -> mail
+  # - language switch        -> language
+  # - external link          -> external-link
+  []

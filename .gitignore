@@ -1,3 +1,6 @@
 .DS_Store
 node_modules/
 dist/
+
+# trackIT Systems font: separate private repo (trackIT-Systems/font), cloned here for the preview
+assets/fonts/trackit-systems/

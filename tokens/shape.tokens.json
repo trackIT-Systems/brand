@@ -1,0 +1,8 @@
+{
+  "radius": {
+    "$type": "dimension",
+    "card": { "$value": { "value": 24, "unit": "px" }, "$description": "Content boxes and cards (styleguide range 16–24px)" },
+    "control": { "$value": { "value": 16, "unit": "px" }, "$description": "Smaller containers, buttons, inputs, tiles" },
+    "pill": { "$value": { "value": 9999, "unit": "px" }, "$description": "Badges and tags (e.g. product badge)" }
+  }
+}

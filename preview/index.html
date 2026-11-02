@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>trackIT Brand Preview</title>
+<link rel="icon" href="../assets/favicon/favicon.ico">
+<!-- Everything shown here is read at runtime from the repo (tokens, assets, glossary, ADRs), so this page cannot drift from the files. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<style>
+  :root {
+    --c-page: #F5F5F5; --c-text: #222222; --c-heading: #1E5D39; --c-card: #5A7A6B;
+    --c-on-card: #FFFFFF; --c-border: #CBD6CD; --c-cta: #FF6B35; --c-on-cta: #222222;
+    --c-surface: #FFFFFF; --c-surface-subtle: #CBD6CD; --c-link: #1E5D39; --c-accent: #1E5D39; --c-on-accent: #FFFFFF;
+    --c-border-control: #5A7A6B; --c-focus: #1E5D39;
+    --r-card: 24px; --r-control: 16px; --r-pill: 9999px;
+    --f-display: "trackIT Systems", system-ui, sans-serif;
+    --f-text: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--c-page); color: var(--c-text);
+    font: 16px/1.55 var(--f-text); }
+  a { color: var(--c-link); text-underline-offset: 2px; }
+  p, li { text-wrap: pretty; }
+  :focus-visible { outline: 3px solid var(--c-focus); outline-offset: 2px; }
+  header.top :focus-visible, .card :focus-visible { outline-color: var(--c-on-card); }
+  header.top { background: var(--c-card); color: var(--c-on-card); padding: 40px 16px 32px; }
+  header.top .wrap { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  header.top img { height: 72px; }
+  header.top h1 { font-family: var(--f-display); font-weight: 700; margin: 0; font-size: clamp(26px, 5vw, 40px); line-height: 1.1; }
+  header.top p { margin: 4px 0 0; }
+  .wrap { max-width: 1160px; margin: 0 auto; }
+  nav.toc { position: sticky; top: 0; z-index: 5; background: var(--c-page); border-bottom: 1px solid var(--c-border); padding: 0 16px; }
+  nav.toc .wrap { display: flex; gap: 4px 16px; flex-wrap: wrap; padding: 10px 0; font-size: 14px; }
+  nav.toc a { text-decoration: none; color: var(--c-text); }
+  nav.toc a:hover { color: var(--c-heading); text-decoration: underline; }
+  main { padding: 0 16px 64px; }
+  section { padding-top: 48px; }
+  h2 { color: var(--c-heading); font-size: 26px; margin: 0 0 4px; }
+  h3 { color: var(--c-heading); font-size: 18px; margin: 28px 0 8px; }
+  .lead { margin: 0 0 20px; max-width: 72ch; }
+  .src { font-size: 13px; }
+  code, .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; }
+  .banner { background: var(--c-surface); border: 2px solid var(--c-border-control); border-radius: var(--r-control); padding: 12px 16px; margin: 24px 0 0; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); }
+  .panel { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-control); padding: 16px; }
+  .scroll { overflow-x: auto; }
+  .scroll:has(> table):not(.bare) { border: 1px solid var(--c-border); border-radius: var(--r-control); }
+  table { border-collapse: collapse; width: 100%; background: var(--c-surface); font-size: 14px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--c-border); vertical-align: top; }
+  th { background: var(--c-surface-subtle); color: var(--c-text); font-weight: 600; }
+  tbody tr:last-child > * { border-bottom: 0; }
+
+  /* colors */
+  .swatch { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-control); overflow: hidden; }
+  .swatch .chip { height: 84px; border-bottom: 1px solid var(--c-border); }
+  .swatch .body { padding: 10px 12px; font-size: 14px; }
+  .swatch .name { font-weight: 600; }
+  .swatch .roles { font-size: 13px; margin-top: 6px; }
+  .contrast td.cell { text-align: center; font-weight: 600; white-space: nowrap; min-width: 92px; }
+  th.row-head { background: var(--c-surface); color: var(--c-heading); }
+  .contrast td.same { background: var(--c-page); }
+  .contrast .verdict { display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; padding: 1px 8px; border-radius: var(--r-pill);
+    background: var(--c-surface); color: var(--c-text); font-size: 12px; font-weight: 600; }
+  .contrast td.approved { box-shadow: inset 0 0 0 3px var(--c-surface), inset 0 0 0 5px var(--c-text); }
+  .contrast td.approved .verdict { background: var(--c-text); color: var(--c-surface); }
+  .pairs { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr)); margin-bottom: 16px; }
+  .pair .demo.link { text-decoration: underline; text-underline-offset: 2px; }
+  .pair { border-radius: var(--r-control); border: 1px solid var(--c-border); overflow: hidden; background: var(--c-surface); }
+  .pair .demo { padding: 14px 16px; font-size: 17px; font-weight: 600; }
+  .pair .demo small { display: block; font-size: 14px; font-weight: 400; }
+  .pair .meta { padding: 8px 16px; font-size: 13px; }
+
+  /* logos */
+  .logo-row { display: grid; grid-template-columns: 220px repeat(var(--n), minmax(110px, 1fr)); gap: 8px; align-items: stretch; margin-bottom: 8px; min-width: calc(220px + var(--n) * 118px); }
+  .logo-row .label { font-size: 13px; align-self: center; }
+  .logo-tile { position: relative; border-radius: var(--r-control); border: 1px solid var(--c-border); height: 110px; display: flex; align-items: center; justify-content: center; padding: 22px 10px 10px; }
+  .logo-tile img { max-width: 100%; max-height: 100%; }
+  .logo-tile.no img { opacity: .3; }
+  .logo-tile .tag { position: absolute; top: 6px; left: 6px; display: inline-flex; align-items: center; gap: 3px; padding: 0 7px; border-radius: var(--r-pill);
+    background: var(--c-surface); color: var(--c-text); font-size: 11px; font-weight: 600; line-height: 18px; }
+  .logo-tile.ok .tag { background: var(--c-text); color: var(--c-surface); }
+  .logo-head { font-size: 12px; text-align: center; align-self: end; }
+
+  /* type */
+  .type-controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .type-controls input[type=text] { flex: 1 1 260px; padding: 8px 12px; border: 1px solid var(--c-border-control); border-radius: var(--r-control); font: inherit; background: var(--c-surface); }
+  .type-spec { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-control); padding: 16px 20px; margin-bottom: 12px; }
+  .type-spec .meta { font-size: 13px; margin-bottom: 8px; }
+  .type-spec .meta b { color: var(--c-heading); }
+  .type-spec .big { font-size: clamp(32px, 6vw, 56px); line-height: 1.1; overflow-wrap: anywhere; }
+  .type-spec .mid { font-size: 24px; line-height: 1.25; margin-top: 8px; }
+  .type-spec .small { font-size: 16px; margin-top: 8px; overflow-wrap: anywhere; }
+
+  /* components */
+  .card { background: var(--c-card); color: var(--c-on-card); border-radius: var(--r-card); padding: 24px 28px; }
+  .card h3 { color: inherit; margin: 0 0 8px; letter-spacing: .02em; text-transform: uppercase; font-size: 17px; }
+  .card ul { margin: 0; padding-left: 20px; }
+  .pill { display: inline-block; background: var(--c-accent); color: var(--c-on-accent); border-radius: var(--r-pill); padding: 6px 16px; font-weight: 600; }
+  /* buttons: hover and pressed move the fill away from the label color (15% / 30%), see DESIGN.md */
+  .btn { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; border: 2px solid transparent; border-radius: var(--r-control); padding: 11px 22px; font: 600 15px/1.2 var(--f-text); cursor: pointer; }
+  .btn.primary { --fill: var(--c-cta); --away: var(--c-surface); background: var(--fill); color: var(--c-on-cta); }
+  .btn.secondary { --fill: var(--c-accent); --away: var(--c-text); background: var(--fill); color: var(--c-on-accent); }
+  .btn.container { --fill: var(--c-card); --away: var(--c-text); background: var(--fill); color: var(--c-on-card); }
+  :is(.btn.primary, .btn.secondary, .btn.container):is(:hover, .is-hover):not(:disabled) { background: color-mix(in srgb, var(--fill) 85%, var(--away)); }
+  :is(.btn.primary, .btn.secondary, .btn.container):is(:active, .is-active):not(:disabled) { background: color-mix(in srgb, var(--fill) 70%, var(--away)); }
+  .btn.outline { background: transparent; color: var(--c-accent); border-color: var(--c-accent); }
+  .btn.outline:is(:hover, .is-hover):not(:disabled) { background: var(--c-surface-subtle); }
+  .btn.outline:is(:active, .is-active):not(:disabled) { background: var(--c-accent); color: var(--c-on-accent); }
+  .card .btn.outline { color: var(--c-on-card); border-color: var(--c-on-card); }
+  .card .btn.outline:is(:hover, .is-hover) { background: color-mix(in srgb, var(--c-on-card) 15%, transparent); }
+  .card .btn.outline:is(:active, .is-active) { background: color-mix(in srgb, var(--c-on-card) 30%, transparent); }
+  .btn:disabled { background: var(--c-surface-subtle); color: var(--c-card); border-color: transparent; cursor: not-allowed; }
+  .btn-states td, .btn-states th { vertical-align: middle; }
+  th .src { font-weight: 400; color: var(--c-text); }
+  .card .btn-row { margin-top: 18px; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .round-img { width: 140px; height: 140px; border-radius: 50%; border: 5px solid var(--c-card); background: var(--c-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .round-img img { width: 70%; }
+  .radius-demo { display: flex; gap: 16px; flex-wrap: wrap; }
+  .radius-demo div { width: 130px; height: 90px; background: var(--c-border); display: flex; align-items: flex-end; padding: 8px 10px; font-size: 12px; }
+
+  /* icons */
+  .icon-table td { vertical-align: middle; }
+  .icon-table svg { display: inline-block; vertical-align: middle; margin-right: 10px; color: var(--c-text); }
+  .icon-on-card { background: var(--c-card); color: var(--c-on-card); border-radius: var(--r-control); padding: 6px 10px; display: inline-flex; gap: 10px; }
+  .icon-on-card svg { color: var(--c-on-card); margin: 0; }
+
+  /* docs */
+  details.doc { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-control); margin-bottom: 10px; }
+  details.doc summary { cursor: pointer; padding: 12px 16px; font-weight: 600; color: var(--c-heading); }
+  details.doc .md { padding: 0 20px 16px; overflow-x: auto; }
+  .status { display: inline-block; border-radius: var(--r-pill); padding: 1px 10px; font-size: 12px; font-weight: 600; }
+  .status.Accepted { background: var(--c-accent); color: var(--c-on-accent); }
+  .status.Proposed { background: var(--c-border); color: var(--c-heading); }
+  .status.other { background: var(--c-page); border: 1px solid var(--c-border-control); }
+  .todo-owner { font-weight: 600; color: var(--c-heading); margin-top: 14px; }
+  .todo-list { margin: 4px 0 0; padding-left: 20px; font-size: 14px; max-width: 65ch; }
+  .todo-list .src { margin-left: 6px; }
+  footer { padding: 24px 16px; font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img src="../assets/logo/trackit-logo-white.svg" alt="trackIT systems">
+    <div>
+      <h1>Brand Preview</h1>
+      <p>Overview of the brand repo: colors, logos, type, components, icons, terms and decisions. Read live from the repo files.</p>
+    </div>
+  </div>
+</header>
+<nav class="toc"><div class="wrap">
+  <a href="#colors">Colors</a><a href="#contrast">Contrast</a><a href="#logos">Logos</a><a href="#type">Typography</a>
+  <a href="#components">Shapes &amp; buttons</a><a href="#icons">Icons</a><a href="#glossary">Glossary</a>
+  <a href="#decisions">Decisions</a><a href="#todos">Open points</a><a href="#docs">Documents</a>
+</div></nav>
+
+<main><div class="wrap">
+  <div id="file-warning" class="banner" hidden>
+    This page reads the repo files and needs a local web server. From the brand repo root run
+    <code>python3 -m http.server 8000</code> and open <a href="http://localhost:8000/preview/">http://localhost:8000/preview/</a>.
+  </div>
+
+  <section id="colors">
+    <h2>Colors</h2>
+    <p class="lead">Palette and the roles each color plays. Code uses roles, never palette values directly.</p>
+    <div class="grid" id="palette"></div>
+    <h3>Roles</h3>
+    <div class="scroll"><table id="roles"><thead><tr><th>Role</th><th>Color</th><th>Use</th></tr></thead><tbody></tbody></table></div>
+    <p class="src">Source: <a href="../tokens/color.tokens.json">tokens/color.tokens.json</a></p>
+  </section>
+
+  <section id="contrast">
+    <h2>Contrast</h2>
+    <p class="lead">Approved text and background pairs, taken from the color roles: <code>text</code>, <code>heading</code> and <code>link</code> on <code>page-background</code> and <code>surface</code>, and each <code>on-X</code> on its <code>X</code>. Use these; other pairs are not approved, even when their contrast passes.</p>
+    <div class="pairs" id="pairs"></div>
+    <details class="doc">
+      <summary>All combinations of the palette (for checking, not for use)</summary>
+      <div class="md">
+        <p class="src">WCAG 2.1 contrast of every text color (rows) on every background (columns), computed from the tokens. AA needs 4.5:1 for body text and 3:1 for large text. Framed cells with a dark label are approved pairs.</p>
+        <div class="scroll"><table class="contrast" id="contrast-table"></table></div>
+      </div>
+    </details>
+  </section>
+
+  <section id="logos">
+    <h2>Logos</h2>
+    <p class="lead">Every logo and mark file on each background it could land on. Allowed combinations come from the “Use on” column in <a href="../assets/README.md">assets/README.md</a>; the others are dimmed.</p>
+    <div class="scroll" id="logo-matrix"></div>
+    <h3>Favicon</h3>
+    <div class="btn-row">
+      <img src="../assets/favicon/favicon.ico" width="16" height="16" alt="favicon 16px">
+      <img src="../assets/favicon/favicon.ico" width="32" height="32" alt="favicon 32px">
+      <img src="../assets/favicon/favicon.ico" width="64" height="64" alt="favicon 64px">
+      <span class="src">16 / 32 / 64 px</span>
+    </div>
+    <p class="src">Source: <a href="../assets/README.md">assets/README.md</a></p>
+  </section>
+
+  <section id="type">
+    <h2>Typography</h2>
+    <p class="lead">Display: our own font trackIT Systems in Bold and Regular (ADR-0009), for selected cases only. Files in the private repo trackIT-Systems/font; fallback fonts where they are missing. Text typeface not chosen yet (placeholder shown).</p>
+    <div class="type-controls">
+      <input type="text" id="type-sample" value="trackIT systems" aria-label="Sample text">
+      <label><input type="checkbox" id="type-upper"> uppercase</label>
+    </div>
+    <div id="type-in-use"></div>
+    <p class="src">Source: <a href="../tokens/typography.tokens.json">tokens/typography.tokens.json</a>, <a href="https://github.com/trackIT-Systems/font">trackIT-Systems/font</a></p>
+  </section>
+
+  <section id="components">
+    <h2>Shapes &amp; buttons</h2>
+    <p class="lead">Elements from the styleguide working draft, built from the tokens.</p>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); align-items: start;">
+      <div class="card">
+        <h3>Vorteile auf einen Blick</h3>
+        <ul><li>Content box in slate-green, radius.card</li><li>White text on slate-green</li><li>No sharp corners next to round ones</li></ul>
+        <div class="btn-row">
+          <button type="button" class="btn primary">Anfrage senden</button>
+          <button type="button" class="btn outline">Mehr erfahren</button>
+        </div>
+      </div>
+      <div class="panel">
+        <p style="margin-top:0"><span class="pill">EcoHub</span></p>
+        <p class="src">Product badge: dark-green pill on a light background.</p>
+        <div class="round-img"><img src="../assets/mark/trackit-mark-black.svg" alt=""></div>
+        <p class="src">Round image crop with a slate-green ring.</p>
+      </div>
+    </div>
+    <h3>Buttons</h3>
+    <div class="scroll"><table class="btn-states" id="btn-states"></table></div>
+    <p class="src">Hover and pressed are shown fixed; the live buttons react too. Tab to a button to see the focus ring. On a slate-green card, use the primary CTA or the white outline button (see the card above). Rules: <a href="../DESIGN.md">DESIGN.md</a>, Buttons.</p>
+    <h3>Corner radii</h3>
+    <div class="radius-demo" id="radius-demo"></div>
+    <p class="src">Source: <a href="../tokens/shape.tokens.json">tokens/shape.tokens.json</a>, <a href="../DESIGN.md">DESIGN.md</a></p>
+  </section>
+
+  <section id="icons">
+    <h2>Icons</h2>
+    <p class="lead">Tabler Icons (outline). The concept map in <code>icons.yml</code> decides which icon means what.</p>
+    <div id="icon-map"></div>
+    <h3>Stroke width comparison</h3>
+    <p class="lead">Open decision: Tabler default 2px or a lighter 1.5px. Same icons at 16, 20 and 24px.</p>
+    <div class="scroll"><table class="icon-table" id="icon-strokes"></table></div>
+    <p class="src">Source: <a href="../assets/icons/icons.yml">assets/icons/icons.yml</a>, ADR-0006</p>
+  </section>
+
+  <section id="glossary">
+    <h2>Glossary</h2>
+    <p class="lead">Canonical terms. Anything in “avoid” gets replaced with the canonical term.</p>
+    <div class="scroll"><table id="glossary-table"><thead><tr><th>Term (DE)</th><th>Term (EN)</th><th>Avoid</th><th>Definition</th><th>Notes</th></tr></thead><tbody></tbody></table></div>
+    <p class="src">Source: <a href="../glossary/terms.yml">glossary/terms.yml</a></p>
+  </section>
+
+  <section id="decisions">
+    <h2>Decisions</h2>
+    <p class="lead">Brand decision records in <code>docs/adr/</code>.</p>
+    <div class="scroll"><table id="adr-table"><thead><tr><th>ADR</th><th>Decision</th><th>Status</th><th>Date</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section id="todos">
+    <h2>Open points</h2>
+    <p class="lead">Every <code>TODO</code> in the repo's text files, grouped by owner. Points without an owner are listed under “unassigned”.</p>
+    <div id="todo-list"></div>
+  </section>
+
+  <section id="docs">
+    <h2>Documents</h2>
+    <p class="lead">The rule documents, rendered.</p>
+    <div id="doc-list"></div>
+  </section>
+</div></main>
+
+<footer>trackIT Systems brand repo · preview/index.html</footer>
+
+<script>
+const ROOT = '..';
+const TABLER = 'https://cdn.jsdelivr.net/npm/@tabler/icons@3.35.0/icons/outline/';
+const DOCS = ['README.md', 'DESIGN.md', 'VOICE.md', 'assets/README.md', 'tokens/README.md',
+  'docs/sources/README.md'];
+// Open points are collected from every text file in the repo, except these folders and files
+const TODO_SKIP = /^(\.|preview\/|assets\/fonts\/trackit-systems\/|docs\/adr\/0000-)/;
+
+const $ = (s) => document.querySelector(s);
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) k === 'style' ? n.style.cssText = v : k === 'html' ? n.innerHTML = v : n.setAttribute(k, v);
+  for (const k of kids) n.append(k);
+  return n;
+};
+const text = (p) => fetch(`${ROOT}/${p}`).then((r) => { if (!r.ok) throw new Error(`${p}: ${r.status}`); return r.text(); });
+const json = (p) => text(p).then(JSON.parse);
+async function listDir(p, { dirs = false } = {}) {
+  const html = await text(p);
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return [...doc.querySelectorAll('a[href]')].map((a) => decodeURIComponent(a.getAttribute('href')))
+    .filter((h) => !h.startsWith('?') && !h.startsWith('/') && !h.startsWith('..') && (dirs || !h.endsWith('/')));
+}
+async function walk(dir = '') {
+  const items = (await listDir(dir || './', { dirs: true })).map((h) => dir + h).filter((h) => !TODO_SKIP.test(h));
+  const nested = await Promise.all(items.filter((h) => h.endsWith('/')).map((h) => walk(h)));
+  return [...items.filter((h) => /\.(md|ya?ml|json)$/.test(h)), ...nested.flat()];
+}
+const fail = (target, err) => target.replaceChildren(el('p', { class: 'src' }, `Could not load: ${err.message}`));
+
+if (location.protocol === 'file:') $('#file-warning').hidden = false;
+
+// ---- tokens ----
+function resolve(tokens, v) {
+  const m = typeof v === 'string' && v.match(/^\{(.+)\}$/);
+  if (!m) return v;
+  return resolve(tokens, m[1].split('.').reduce((o, k) => o[k], tokens).$value);
+}
+const entries = (group) => Object.entries(group).filter(([k]) => !k.startsWith('$'));
+const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+function lum(hex) {
+  const c = rgb(hex).map((x) => x / 255).map((x) => x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+const ratio = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+
+let PALETTE = [];
+async function loadColors() {
+  const t = await json('tokens/color.tokens.json');
+  PALETTE = entries(t.color.palette).map(([k, v]) => ({ id: k, hex: v.$value.toUpperCase(), desc: v.$description }));
+  const roles = entries(t.color.role).map(([k, v]) => ({ id: k, ref: v.$value, hex: resolve(t, v.$value).toUpperCase(), desc: v.$description }));
+
+  // apply roles to this page, so the page itself follows the tokens
+  const css = { 'page-background': '--c-page', surface: '--c-surface', 'surface-subtle': '--c-surface-subtle', text: '--c-text',
+    heading: '--c-heading', link: '--c-link', accent: '--c-accent',
+    'surface-card': '--c-card', 'on-surface-card': '--c-on-card', 'on-accent': '--c-on-accent', border: '--c-border',
+    'border-control': '--c-border-control', 'focus-ring': '--c-focus', cta: '--c-cta', 'on-cta': '--c-on-cta' };
+  for (const r of roles) if (css[r.id]) document.documentElement.style.setProperty(css[r.id], r.hex);
+
+  $('#palette').replaceChildren(...PALETTE.map((p) => {
+    const used = roles.filter((r) => r.ref === `{color.palette.${p.id}}`).map((r) => r.id);
+    return el('div', { class: 'swatch' },
+      el('div', { class: 'chip', style: `background:${p.hex}` }),
+      el('div', { class: 'body' },
+        el('div', { class: 'name' }, p.desc || p.id),
+        el('div', { class: 'mono' }, `${p.id}`),
+        el('div', { class: 'mono' }, `${p.hex} · RGB ${rgb(p.hex).join(', ')}`),
+        el('div', { class: 'roles' }, used.length ? `Roles: ${used.join(', ')}` : 'No role')));
+  }));
+  $('#roles tbody').replaceChildren(...roles.map((r) => el('tr', {},
+    el('td', { class: 'mono' }, r.id),
+    el('td', {}, el('span', { style: `display:inline-block;width:18px;height:18px;border-radius:5px;vertical-align:middle;margin-right:8px;border:1px solid var(--c-border-control);background:${r.hex}` }),
+      el('span', { class: 'mono' }, r.ref.replace(/[{}]/g, '').replace('color.palette.', ''))),
+    el('td', {}, r.desc || ''))));
+
+  // approved pairs: text/heading/link on the light backgrounds, and every on-X on X
+  const role = Object.fromEntries(roles.map((r) => [r.id, r]));
+  const pairs = [
+    ...['text', 'heading', 'link'].flatMap((fg) => ['page-background', 'surface', 'surface-subtle'].map((bg) => [fg, bg])),
+    ...roles.filter((r) => r.id.startsWith('on-') && role[r.id.slice(3)]).map((r) => [r.id, r.id.slice(3)]),
+  ].filter(([fg, bg]) => role[fg] && role[bg]);
+  const verdictOf = (r) => r >= 7 ? 'AAA' : r >= 4.5 ? 'AA' : r >= 3 ? 'large only' : 'fail';
+  $('#pairs').replaceChildren(...pairs.map(([fg, bg]) => {
+    const r = ratio(role[fg].hex, role[bg].hex);
+    return el('div', { class: 'pair' },
+      el('div', { class: `demo${fg === 'link' ? ' link' : ''}`, style: `background:${role[bg].hex};color:${role[fg].hex}` }, `${fg}`, el('small', {}, `on ${bg}`)),
+      el('div', { class: 'meta' }, `${r.toFixed(2)}:1 · ${verdictOf(r)}`));
+  }));
+  const approved = new Set(pairs.map(([fg, bg]) => `${role[fg].hex}/${role[bg].hex}`));
+
+  // contrast matrix of the whole palette
+  const check = await tablerSvg('check', 12, 2.5).catch(() => '');
+  const head = el('tr', {}, el('th', {}, 'Text ↓ / Background →'), ...PALETTE.map((p) => el('th', {}, p.id)));
+  const rows = PALETTE.map((fg) => el('tr', {}, el('th', { class: 'row-head' }, fg.id),
+    ...PALETTE.map((bg) => {
+      if (fg.id === bg.id) return el('td', { class: 'same' });
+      const r = ratio(fg.hex, bg.hex);
+      const ok = approved.has(`${fg.hex}/${bg.hex}`);
+      return el('td', { class: `cell${ok ? ' approved' : ''}`, style: `background:${bg.hex};color:${fg.hex}` },
+        `${r.toFixed(2)}:1`, el('br'),
+        el('span', { class: 'verdict' }, ...(ok && check ? [check.cloneNode(true)] : []), ok ? `approved · ${verdictOf(r)}` : verdictOf(r)));
+    })));
+  $('#contrast-table').replaceChildren(el('thead', {}, head), el('tbody', {}, ...rows));
+}
+
+async function loadShapes() {
+  const t = await json('tokens/shape.tokens.json');
+  const px = (v) => typeof v === 'object' ? `${v.value}${v.unit}` : v;
+  for (const [k, v] of entries(t.radius)) document.documentElement.style.setProperty(`--r-${k}`, px(v.$value));
+  $('#radius-demo').replaceChildren(...entries(t.radius).map(([k, v]) =>
+    el('div', { style: `border-radius:${px(v.$value)}` }, el('span', { class: 'mono' }, `${k} · ${px(v.$value)}`))));
+}
+
+// ---- logos ----
+async function loadLogos() {
+  const files = [
+    ...(await listDir('assets/logo/')).filter((f) => f.endsWith('.svg')).map((f) => `assets/logo/${f}`),
+    ...(await listDir('assets/mark/')).filter((f) => f.endsWith('.svg')).map((f) => `assets/mark/${f}`),
+  ];
+  // allowed backgrounds: the color tokens named in the "Use on" column of assets/README.md
+  const allowed = {};
+  for (const line of (await text('assets/README.md')).split('\n')) {
+    const m = line.match(/^\|\s*\[([^\]]+\.svg)\]/);
+    if (m) allowed[`assets/${m[1]}`] = new Set([...line.split('|').at(-2).matchAll(/`([a-z-]+)`/g)].map((x) => x[1]));
+  }
+  const bgs = ['soft-white', 'white', 'mint', 'dark-gray', 'slate-green', 'dark-green']
+    .map((id) => PALETTE.find((p) => p.id === id)).filter(Boolean);
+  const [yes, no] = await Promise.all([tablerSvg('check', 11, 2.5), tablerSvg('x', 11, 2.5)]).catch(() => ['', '']);
+  const row = (...kids) => el('div', { class: 'logo-row', style: `--n:${bgs.length}` }, ...kids);
+  const head = row(el('div'), ...bgs.map((b) => el('div', { class: 'logo-head' }, `on ${b.id}`)));
+  const rows = files.map((f) => row(
+    el('div', { class: 'label' }, el('a', { href: `${ROOT}/${f}`, class: 'mono' }, f.split('/').pop()),
+      allowed[f] ? '' : el('div', { class: 'src' }, 'Not listed in assets/README.md')),
+    ...bgs.map((b) => {
+      const ok = allowed[f]?.has(b.id);
+      const icon = ok ? yes : no;
+      return el('div', { class: `logo-tile ${ok ? 'ok' : 'no'}`, style: `background:${b.hex}` },
+        el('span', { class: 'tag' }, ...(icon ? [icon.cloneNode(true)] : []), ok ? 'allowed' : 'not allowed'),
+        el('img', { src: `${ROOT}/${f}`, alt: '', loading: 'lazy' }));
+    })));
+  $('#logo-matrix').replaceChildren(head, ...rows);
+}
+
+// ---- type ----
+const fontUrl = (file) => `url("${ROOT}/assets/fonts/trackit-systems/woff2/${encodeURIComponent(file)}.woff2")`;
+async function loadType() {
+  const t = await json('tokens/typography.tokens.json');
+  const stack = (v) => v.$value.map((f) => /\s/.test(f) ? `"${f}"` : f).join(', ');
+  const display = t.font.family.display.$value[0];
+  document.documentElement.style.setProperty('--f-display', stack(t.font.family.display));
+  document.documentElement.style.setProperty('--f-text', stack(t.font.family.text));
+  // the display family as the web will use it: one family, weights from the tokens
+  const inUse = entries(t.font.weight).map(([k, v]) => ({ token: k, weight: v.$value, desc: v.$description,
+    file: `${display} ${v.$value >= 700 ? 'Bold' : 'Regular'}` }));
+  for (const s of inUse) document.fonts.add(new FontFace(display, fontUrl(s.file), { weight: String(s.weight) }));
+
+  const render = () => {
+    const sample = $('#type-sample').value || 'trackIT systems';
+    const upper = $('#type-upper').checked ? 'text-transform:uppercase;' : '';
+    $('#type-in-use').replaceChildren(
+      ...inUse.map((s) => el('div', { class: 'type-spec', style: `font-family:var(--f-display);font-weight:${s.weight};${upper}` },
+        el('div', { class: 'meta', style: 'font-family:var(--f-text);text-transform:none' },
+          el('b', {}, s.file), ` · weight ${s.weight} · `, el('span', { class: 'mono' }, `font.family.display + font.weight.${s.token}`), ` · ${s.desc}`),
+        el('div', { class: 'big' }, sample),
+        el('div', { class: 'mid' }, 'Akustisches Monitoring für Fledermäuse und Vögel'),
+        el('div', { class: 'small' }, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz äöüß 0123456789'))),
+      // typeset with the wordmark's letter-spacing, next to the logo
+      el('div', { class: 'type-spec' },
+        el('div', { class: 'meta' }, el('b', {}, 'Typeset vs. logo'), ' · letter-spacing 0.028em (Bold) and 0.04em (Regular), as measured in the wordmark · always use the logo files for the logo'),
+        el('div', { style: 'display:flex;gap:32px;align-items:center;flex-wrap:wrap' },
+          el('img', { src: `${ROOT}/assets/logo/trackit-logo-black.svg`, alt: 'trackIT systems logo', style: 'height:120px' }),
+          el('div', { style: 'font-family:var(--f-display);line-height:1;text-align:right' },
+            el('div', { style: 'font-weight:700;font-size:56px;letter-spacing:.028em' }, 'trackIT'),
+            el('div', { style: 'font-weight:400;font-size:37px;letter-spacing:.04em' }, 'systems')))),
+      el('div', { class: 'type-spec' },
+        el('div', { class: 'meta' }, el('b', {}, 'Text typeface: placeholder'), ' · ', el('span', { class: 'mono' }, 'font.family.text'), ` · ${t.font.family.text.$description}`),
+        el('div', { class: 'small', style: 'margin-top:0' }, 'Body text, UI and data. Running text never uses the display face. 0123456789')));
+  };
+  $('#type-sample').addEventListener('input', render);
+  $('#type-upper').addEventListener('change', render);
+  render();
+}
+
+// ---- icons ----
+const svgCache = {};
+async function tablerSvg(name, size, stroke) {
+  svgCache[name] ??= fetch(`${TABLER}${name}.svg`).then((r) => r.ok ? r.text() : Promise.reject(new Error(name)));
+  const svg = new DOMParser().parseFromString(await svgCache[name], 'image/svg+xml').documentElement;
+  svg.setAttribute('width', size); svg.setAttribute('height', size); svg.setAttribute('stroke-width', stroke);
+  return document.importNode(svg, true);
+}
+async function loadIcons() {
+  const map = (jsyaml.load(await text('assets/icons/icons.yml'))?.icons) || [];
+  if (!map.length) {
+    $('#icon-map').replaceChildren(el('p', { class: 'src' }, 'No concepts mapped yet in icons.yml. The comparison below uses example icons.'));
+  } else {
+    const rows = await Promise.all(map.map(async (m) => el('tr', {},
+      el('td', {}, await tablerSvg(m.tabler, 24, 2)), el('td', { class: 'mono' }, m.id), el('td', { class: 'mono' }, m.tabler), el('td', {}, m.notes || ''))));
+    $('#icon-map').replaceChildren(el('div', { class: 'scroll' }, el('table', { class: 'icon-table' },
+      el('thead', {}, el('tr', {}, el('th', {}, 'Icon'), el('th', {}, 'Concept'), el('th', {}, 'Tabler name'), el('th', {}, 'Notes'))),
+      el('tbody', {}, ...rows))));
+  }
+  const names = map.length ? map.map((m) => m.tabler) : ['microphone', 'antenna', 'chart-dots', 'tag', 'mail', 'language', 'map-pin', 'external-link'];
+  const strokes = [1.5, 2];
+  const head = el('tr', {}, el('th', {}, 'Icon'), ...strokes.map((s) => el('th', {}, `stroke ${s}`)), el('th', {}, 'on slate-green, stroke 1.5 / 2'));
+  const rows = await Promise.all(names.map(async (n) => {
+    const cells = await Promise.all(strokes.map(async (s) => el('td', {}, ...(await Promise.all([16, 20, 24].map((z) => tablerSvg(n, z, s)))))));
+    const onCard = el('span', { class: 'icon-on-card' }, await tablerSvg(n, 24, 1.5), await tablerSvg(n, 24, 2));
+    return el('tr', {}, el('td', { class: 'mono' }, n), ...cells, el('td', {}, onCard));
+  }));
+  $('#icon-strokes').replaceChildren(el('thead', {}, head), el('tbody', {}, ...rows));
+}
+
+// ---- glossary ----
+async function loadGlossary() {
+  const terms = (jsyaml.load(await text('glossary/terms.yml'))?.terms) || [];
+  $('#glossary-table tbody').replaceChildren(...(terms.length ? terms.map((t) => el('tr', {},
+    el('td', {}, t.de || ''), el('td', {}, t.en || ''), el('td', {}, (t.avoid || []).join(', ')),
+    el('td', {}, t.definition || ''), el('td', {}, (t.notes || '').trim()))) : [el('tr', {}, el('td', { colspan: 5 }, 'No terms yet.'))]));
+}
+
+// ---- decisions ----
+async function loadAdrs() {
+  const files = (await listDir('docs/adr/')).filter((f) => /^\d{4}-.*\.md$/.test(f) && !f.startsWith('0000')).sort();
+  const rows = await Promise.all(files.map(async (f) => {
+    const md = await text(`docs/adr/${f}`);
+    const title = (md.match(/^#\s+(.+)$/m) || [, f])[1];
+    const status = (md.match(/^- Status:\s*(.+)$/m) || [, '?'])[1].trim();
+    const date = (md.match(/^- Date:\s*(.+)$/m) || [, ''])[1].trim();
+    const [num, ...rest] = title.split('. ');
+    const cls = ['Accepted', 'Proposed'].includes(status) ? status : 'other';
+    return el('tr', {}, el('td', { class: 'mono' }, el('a', { href: `${ROOT}/docs/adr/${f}` }, num)),
+      el('td', {}, rest.join('. ') || title), el('td', {}, el('span', { class: `status ${cls}` }, status)), el('td', { class: 'mono' }, date));
+  }));
+  $('#adr-table tbody').replaceChildren(...rows);
+}
+
+// ---- open points ----
+async function loadTodos() {
+  const byOwner = {};
+  // JSON values end in quotes and brackets; other files keep their trailing punctuation
+  const clean = (t, f = '') => t.replace(/^[-#*\s]+/, '').replace(f.endsWith('.json') ? /"?\s*[}\],]*\s*$/ : /,\s*$/, '').trim();
+  await Promise.all((await walk()).map(async (f) => {
+    const lines = (await text(f).catch(() => '')).split('\n');
+    lines.forEach((line, i) => {
+      const m = line.match(/TODO(?:\(([^)]+)\))?:\s*(.*)$/);
+      if (!m || m[1] === 'owner') return;
+      const owner = m[1] || 'unassigned';
+      // a TODO in a YAML comment continues in the comment lines below it
+      const comment = /^\s*#/.test(line) && /\.ya?ml$/.test(f);
+      const rest = [];
+      for (const l of lines.slice(i + 1)) {
+        if (comment && !/^\s*#/.test(l)) break;
+        rest.push(comment ? l.replace(/^\s*#/, '') : l);
+      }
+      // wrapped lines of the same paragraph belong to the TODO
+      const prose = (l) => l.trim() && !/^\s*([-*#|>]|[\w-]+:(\s|$))/.test(l) && !l.includes('TODO');
+      const wrapped = rest.slice(0, rest.findIndex((l) => !prose(l)) >>> 0).map((l) => l.trim());
+      const t = clean([m[2], ...wrapped].join(' '), f);
+      // a TODO that is empty or ends with ":" owns the bullet list below it (blank lines in between allowed)
+      const after = rest.slice(wrapped.length);
+      const start = after.findIndex((l) => l.trim());
+      const bullets = start < 0 ? [] : after.slice(start).filter((_, j, a) => a.slice(0, j + 1).every((l) => /^\s*[-*]\s/.test(l))).map((l) => clean(l, f));
+      const items = !t ? bullets : t.endsWith(':') && bullets.length ? [`${t} ${bullets.join('; ')}`] : [t];
+      for (const item of items.length ? items : ['(see file)']) (byOwner[owner] ??= []).push({ f, t: item });
+    });
+  }));
+  const owners = Object.keys(byOwner).sort((a, b) => (a === 'unassigned') - (b === 'unassigned') || a.localeCompare(b));
+  $('#todo-list').replaceChildren(...(owners.length ? owners.flatMap((o) => [
+    el('div', { class: 'todo-owner' }, `${o} (${byOwner[o].length})`),
+    el('ul', { class: 'todo-list' }, ...byOwner[o].map(({ f, t }) => el('li', {}, t, el('a', { class: 'src', href: `${ROOT}/${f}` }, f)))),
+  ]) : [el('p', {}, 'No open points.')]));
+}
+
+// ---- documents ----
+async function loadDocs() {
+  const items = await Promise.all(DOCS.map(async (p) => {
+    const md = await text(p).catch((e) => `_${e.message}_`);
+    const base = p.includes('/') ? p.slice(0, p.lastIndexOf('/') + 1) : '';
+    const body = el('div', { class: 'md', html: marked.parse(md) });
+    // keep relative links working from preview/
+    body.querySelectorAll('a[href], img[src]').forEach((n) => {
+      const a = n.hasAttribute('href') ? 'href' : 'src';
+      const v = n.getAttribute(a);
+      if (!/^(https?:|#|mailto:)/.test(v)) n.setAttribute(a, `${ROOT}/${base}${v}`);
+    });
+    return el('details', { class: 'doc' }, el('summary', {}, p), body);
+  }));
+  $('#doc-list').replaceChildren(...items);
+}
+
+// ---- buttons ----
+function buttonStates() {
+  const kinds = [['primary', 'Primary CTA', 'Any background, one per view'], ['secondary', 'Secondary action', 'Light backgrounds'],
+    ['container', 'Container action', 'White panels, next to slate-green cards'], ['outline', 'Outline', 'Light backgrounds; white on dark']];
+  const states = [['Default', ''], ['Hover', 'is-hover'], ['Pressed', 'is-active'], ['Disabled', 'disabled']];
+  const btn = (k, label, st) => {
+    const b = el('button', { type: 'button', class: `btn ${k} ${st === 'disabled' ? '' : st}`.trim() }, label);
+    if (st === 'disabled') b.disabled = true;
+    return b;
+  };
+  $('#btn-states').replaceChildren(
+    el('thead', {}, el('tr', {}, el('th', {}, 'Button'), ...states.map(([n]) => el('th', {}, n)))),
+    el('tbody', {}, ...kinds.map(([k, label, where]) => el('tr', {},
+      el('th', { class: 'row-head' }, label, el('div', { class: 'src' }, where)),
+      ...states.map(([, st]) => el('td', {}, btn(k, label, st)))))));
+}
+buttonStates();
+
+(async () => {
+  await Promise.all([
+    loadType().catch((e) => fail($('#type-in-use'), e)),
+    loadColors().then(loadLogos).catch((e) => { fail($('#palette'), e); fail($('#logo-matrix'), e); }),
+    loadShapes().catch((e) => fail($('#radius-demo'), e)),
+    loadIcons().catch((e) => fail($('#icon-map'), e)),
+    loadGlossary().catch((e) => fail($('#glossary-table tbody'), e)),
+    loadAdrs().catch((e) => fail($('#adr-table tbody'), e)),
+    loadTodos().catch((e) => fail($('#todo-list'), e)),
+    loadDocs().catch((e) => fail($('#doc-list'), e)),
+  ]);
+})();
+</script>
+</body>
+</html>

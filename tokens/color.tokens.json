@@ -1,0 +1,31 @@
+{
+  "color": {
+    "$type": "color",
+    "palette": {
+      "slate-green": { "$value": "#5A7A6B", "$description": "Schiefergrün" },
+      "dark-green": { "$value": "#1E5D39", "$description": "Dunkelgrün" },
+      "mint": { "$value": "#CBD6CD", "$description": "Hellgrün / Mint" },
+      "signal-orange": { "$value": "#FF6B35", "$description": "Signal Orange" },
+      "dark-gray": { "$value": "#222222", "$description": "Dunkelgrau / Schwarz" },
+      "soft-white": { "$value": "#F5F5F5", "$description": "Soft White" },
+      "white": { "$value": "#FFFFFF", "$description": "Weiß" }
+    },
+    "role": {
+      "page-background": { "$value": "{color.palette.soft-white}", "$description": "Main background, print and digital" },
+      "surface": { "$value": "{color.palette.white}", "$description": "Panels on the page background: tables, forms, specimen boxes" },
+      "text": { "$value": "{color.palette.dark-gray}", "$description": "Body text and secondary text (captions, sources) on light backgrounds" },
+      "heading": { "$value": "{color.palette.dark-green}", "$description": "Headings and running text on light backgrounds" },
+      "link": { "$value": "{color.palette.dark-green}", "$description": "Links on light backgrounds; always underlined, so they differ from headings" },
+      "surface-subtle": { "$value": "{color.palette.mint}", "$description": "Subtle bases on light backgrounds: table headers, highlighted rows (dark-gray 10.64:1, dark-green 5.24:1)" },
+      "surface-card": { "$value": "{color.palette.slate-green}", "$description": "Large content boxes and cards; text inside is white" },
+      "on-surface-card": { "$value": "{color.palette.white}", "$description": "Text and icons on slate-green (4.74:1)" },
+      "accent": { "$value": "{color.palette.dark-green}", "$description": "Product badges, secondary actions" },
+      "on-accent": { "$value": "{color.palette.white}", "$description": "Text and icons on dark-green (7.84:1)" },
+      "border": { "$value": "{color.palette.mint}", "$description": "Decorative borders; too faint for control boundaries (1.37:1 on soft-white)" },
+      "border-control": { "$value": "{color.palette.slate-green}", "$description": "Boundaries of inputs and other controls (4.35:1 on soft-white; WCAG 1.4.11 needs 3:1)" },
+      "focus-ring": { "$value": "{color.palette.dark-green}", "$description": "Keyboard focus on light backgrounds; on slate-green and dark-green use white" },
+      "cta": { "$value": "{color.palette.signal-orange}", "$description": "Primary call to action only; never for large areas" },
+      "on-cta": { "$value": "{color.palette.dark-gray}", "$description": "Text and icons on signal-orange (5.61:1); white fails contrast" }
+    }
+  }
+}
