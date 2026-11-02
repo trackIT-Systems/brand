@@ -1,6 +1,6 @@
 # 0005. Design tokens in W3C DTCG format, built with Style Dictionary
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-11-02
 - Deciders: Jonas Höchst
 

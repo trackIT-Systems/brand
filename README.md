@@ -37,7 +37,19 @@ TODO(Jonas): enable Pages for the repo (Settings › Pages › Source: GitHub Ac
 
 Consumers install a versioned release from GitHub: generated tokens, assets, `DESIGN.md`, `VOICE.md` and glossary as an npm package, so they (and the agents working in them) have the rules locally. See [ADR-0010](docs/adr/0010-releases-on-github.md).
 
-TODO(Jonas): release workflow and first release.
+Releases: [github.com/trackIT-Systems/brand/releases](https://github.com/trackIT-Systems/brand/releases). Install a version in a consumer repo:
+
+```sh
+npm install https://github.com/trackIT-Systems/brand/releases/download/v0.1.0/trackit-systems-brand-0.1.0.tgz
+```
+
+To publish a new version: set `version` in [package.json](package.json) by pull request (major for renamed or removed tokens, assets or rules; minor for added ones; patch for changed values). After the merge, tag `main` and push the tag:
+
+```sh
+git tag v0.2.0 && git push origin v0.2.0
+```
+
+[.github/workflows/release.yml](.github/workflows/release.yml) checks that the tag is on `main` and matches `package.json`, builds and checks the tokens, and publishes the release.
 
 ## Changing the brand
 

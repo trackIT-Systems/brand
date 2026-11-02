@@ -1,6 +1,6 @@
 # 0010. Versioned releases on GitHub
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-11-02
 - Deciders: Jonas Höchst
 
