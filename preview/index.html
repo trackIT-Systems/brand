@@ -241,8 +241,8 @@
     <h2>Icons</h2>
     <p class="lead">Tabler Icons (outline). The concept map in <code>icons.yml</code> decides which icon means what.</p>
     <div id="icon-map"></div>
-    <h3>Stroke width comparison</h3>
-    <p class="lead">Open decision: Tabler default 2px or a lighter 1.5px. Same icons at 16, 20 and 24px.</p>
+    <h3>Sizes</h3>
+    <p class="lead">Stroke 2px (Tabler default). Same icons at 16, 20 and 24px.</p>
     <div class="scroll"><table class="icon-table" id="icon-strokes"></table></div>
     <p class="src">Source: <a href="../assets/icons/icons.yml">assets/icons/icons.yml</a>, ADR-0006</p>
   </section>
@@ -478,11 +478,11 @@ async function loadIcons() {
       el('tbody', {}, ...rows))));
   }
   const names = map.length ? map.map((m) => m.tabler) : ['microphone', 'antenna', 'chart-dots', 'tag', 'mail', 'language', 'map-pin', 'external-link'];
-  const strokes = [1.5, 2];
-  const head = el('tr', {}, el('th', {}, 'Icon'), ...strokes.map((s) => el('th', {}, `stroke ${s}`)), el('th', {}, 'on slate-green, stroke 1.5 / 2'));
+  const strokes = [2];
+  const head = el('tr', {}, el('th', {}, 'Icon'), ...strokes.map((s) => el('th', {}, `stroke ${s}`)), el('th', {}, 'on slate-green'));
   const rows = await Promise.all(names.map(async (n) => {
     const cells = await Promise.all(strokes.map(async (s) => el('td', {}, ...(await Promise.all([16, 20, 24].map((z) => tablerSvg(n, z, s)))))));
-    const onCard = el('span', { class: 'icon-on-card' }, await tablerSvg(n, 24, 1.5), await tablerSvg(n, 24, 2));
+    const onCard = el('span', { class: 'icon-on-card' }, await tablerSvg(n, 24, 2));
     return el('tr', {}, el('td', { class: 'mono' }, n), ...cells, el('td', {}, onCard));
   }));
   $('#icon-strokes').replaceChildren(el('thead', {}, head), el('tbody', {}, ...rows));

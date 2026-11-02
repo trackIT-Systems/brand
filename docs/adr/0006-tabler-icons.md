@@ -14,6 +14,7 @@ Use [Tabler Icons](https://tabler.io/icons) (MIT license, ~6,200 icons, outline 
 
 - Consumers install the official package (`@tabler/icons`) at a pinned version; this repo does not copy the full set.
 - [assets/icons/icons.yml](../../assets/icons/icons.yml) maps our concepts to icon names, so the same concept always gets the same icon.
+- Stroke width is 2px, the Tabler default. Chosen over 1.5px by visual comparison in the brand preview: 2px looked better, especially on low-DPI (non-retina) screens.
 - Custom icons (e.g. for our own devices) are drawn on the same grid and stroke, and live in `assets/icons/`.
 
 ## Consequences

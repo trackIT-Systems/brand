@@ -128,11 +128,12 @@ TODO: color use in charts (categorical, sequential), line weights, labeling, a s
 
 [Tabler Icons](https://tabler.io/icons), outline style ([ADR-0006](docs/adr/0006-tabler-icons.md)).
 
+- Stroke: 2px, the Tabler default. Custom icons use the same stroke.
 - Color: inherits the text color (`currentColor`); white on slate-green and dark-green.
 - Which icon means what: [assets/icons/icons.yml](assets/icons/icons.yml). Add the concept there before using a new icon.
 - Filled variants only where outline is unreadable (very small sizes, active states).
 
-TODO(Nicole): stroke width (Tabler default 2px; 1.5px looks lighter next to body text), sizes (e.g. 16 / 20 / 24px).
+TODO(Nicole): sizes (e.g. 16 / 20 / 24px).
 
 ## Motion
 
