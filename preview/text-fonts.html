@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text Typeface Candidates</title>
+<link rel="icon" href="../assets/favicon/favicon.ico">
+<!-- Comparison page for choosing the text typeface (DESIGN.md, "Text typeface"). Candidates load from Google Fonts for this preview only; the chosen family gets self-hosted in assets/fonts/ with its license. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Alegreya:ital,wght@0,400;0,600;0,700;1,400&family=Jost:ital,wght@0,400;0,600;0,700;1,400&family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Schibsted+Grotesk:ital,wght@0,400;0,600;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Libertinus+Sans:ital,wght@0,400;0,700;1,400&family=Libertinus+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="../dist/tokens.css">
+<style>
+  @font-face { font-family: "trackIT Systems"; font-weight: 700; src: url("../assets/fonts/trackit-systems/woff2/trackIT%20Systems%20Bold.woff2") format("woff2"); }
+  @font-face { font-family: "trackIT Systems"; font-weight: 400; src: url("../assets/fonts/trackit-systems/woff2/trackIT%20Systems%20Regular.woff2") format("woff2"); }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-page-background); color: var(--color-text); font: 16px/1.55 var(--font-text); }
+  a { color: var(--color-link); text-underline-offset: 2px; }
+  p, li { text-wrap: pretty; }
+  :focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
+  .wrap { max-width: 1160px; margin: 0 auto; }
+
+  header.top { background: var(--color-surface-card); color: var(--color-on-surface-card); padding: 40px 16px 32px; }
+  header.top h1 { font-family: var(--font-display); font-weight: 700; margin: 0; font-size: clamp(26px, 5vw, 40px); line-height: 1.1; }
+  header.top p { margin: 8px 0 0; max-width: 72ch; }
+  header.top a { color: inherit; }
+  header.top :focus-visible { outline-color: var(--color-on-surface-card); }
+
+  nav.pick { position: sticky; top: 0; z-index: 5; background: var(--color-page-background); border-bottom: 1px solid var(--color-border); padding: 0 16px; }
+  nav.pick .wrap { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px 0; align-items: center; }
+  nav.pick .label { font-size: 14px; margin-right: 4px; }
+  nav.pick button { font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; min-height: 40px; padding: 6px 16px; border-radius: var(--radius-pill);
+    border: 2px solid var(--color-accent); background: transparent; color: var(--color-accent); }
+  nav.pick button:hover { background: var(--color-border); }
+  nav.pick button[aria-pressed="true"] { background: var(--color-accent); color: var(--color-on-accent); }
+  nav.pick .adjust { margin-left: auto; font-size: 14px; display: flex; gap: 6px; align-items: center; min-height: 40px; cursor: pointer; }
+  nav.pick .adjust select { font: inherit; min-height: 36px; padding: 4px 8px; border-radius: 8px; border: 2px solid var(--color-border-control); background: var(--color-surface); color: var(--color-text); }
+
+  /* Fonts differ in x-height: at the same font-size Schibsted Grotesk looks larger than Libertinus.
+     --sans-fsa / --serif-fsa are set by the size switch (see sizeAdjust() below); the display font stays untouched. */
+  .web, .btn, .paper .head .kicker, .paper .data th, .paper .foot { font-size-adjust: var(--sans-fsa, none); }
+  .paper, .paper .data td { font-size-adjust: var(--serif-fsa, none); }
+  .web h1, .paper h1 { font-size-adjust: none; }
+
+  main { padding: 0 16px 64px; }
+  section { padding-top: 48px; }
+  h2.sec { color: var(--color-heading); font-size: 26px; margin: 0 0 4px; }
+  .lead { margin: 0 0 20px; max-width: 72ch; }
+  .note { font-size: 14px; }
+  .about { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: 16px 20px; margin-top: 24px; }
+  .about h3 { margin: 0 0 6px; color: var(--color-heading); font-size: 18px; }
+  .about p { margin: 0 0 6px; max-width: 80ch; }
+
+  /* online mock: uses the candidate sans */
+  .web { font-family: var(--sans); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); overflow: hidden; }
+  .web .bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--color-border); font-size: 15px; gap: 16px; flex-wrap: wrap; }
+  .web .bar img { height: 30px; display: block; }
+  .web .bar nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  .web .bar nav a { color: var(--color-text); text-decoration: none; }
+  .web article { max-width: 720px; margin: 0 auto; padding: 32px 24px 40px; font-size: 18px; line-height: 1.6; }
+  .web .meta { font-size: 14px; margin: 0 0 8px; }
+  .web h1 { font-family: var(--font-display); font-weight: 700; color: var(--color-heading); font-size: clamp(28px, 5vw, 40px); line-height: 1.12; margin: 0 0 16px; }
+  .web h2 { font-family: var(--sans); font-weight: 700; color: var(--color-heading); font-size: 24px; line-height: 1.25; margin: 32px 0 8px; }
+  .web .intro { font-size: 21px; line-height: 1.5; }
+  .web .caption { font-size: 14px; margin-top: -8px; }
+  .web li { margin-bottom: 6px; }
+  .web .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  .btn { font: inherit; font-family: var(--sans); font-size: 15px; font-weight: var(--sans-semibold); min-height: 44px; padding: 11px 22px; border-radius: var(--radius-control); border: 0; cursor: pointer; }
+  .btn.cta { background: var(--color-cta); color: var(--color-on-cta); }
+  .btn.sec { background: var(--color-accent); color: var(--color-on-accent); }
+  .btn.out { background: transparent; color: var(--color-accent); box-shadow: inset 0 0 0 2px var(--color-accent); }
+  .web .card { background: var(--color-surface-card); color: var(--color-on-surface-card); border-radius: var(--radius-card); padding: 20px 24px; margin-top: 32px; font-size: 16px; }
+  .web .card h3 { margin: 0 0 6px; font-size: 20px; }
+  .web .card p { margin: 0; }
+
+  .data { border-collapse: collapse; width: 100%; font-size: 15px; font-variant-numeric: lining-nums tabular-nums; background: var(--color-surface); }
+  .data th, .data td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--color-border); }
+  .data th { background: var(--color-surface-subtle); font-weight: var(--sans-semibold); }
+  .data td.n, .data th.n { text-align: right; }
+  .scroll { overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-control); margin: 16px 0; }
+  .scroll .data tr:last-child td { border-bottom: 0; }
+
+  /* print mock: uses the candidate serif */
+  .paper-wrap { overflow-x: auto; padding: 8px 0 16px; }
+  .paper { font-family: var(--serif); background: #fff; color: var(--color-text); width: 100%; max-width: 820px; margin: 0 auto; aspect-ratio: 210 / 297;
+    padding: 6% 7%; box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.08); font-size: 14px; line-height: 1.5; display: flex; flex-direction: column; }
+  .paper .head { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1.5px solid var(--color-heading); padding-bottom: 10px; margin-bottom: 18px; gap: 12px; }
+  .paper .head img { height: 26px; }
+  .paper .head .kicker { font-family: var(--sans); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; text-align: right; }
+  .paper h1 { font-family: var(--font-display); font-weight: 700; color: var(--color-heading); font-size: 30px; line-height: 1.12; margin: 0 0 10px; }
+  .paper .standfirst { font-size: 16.5px; line-height: 1.45; font-style: italic; margin: 0 0 18px; }
+  .paper .cols { columns: 2; column-gap: 28px; hyphens: auto; text-align: left; }
+  .paper .cols p { margin: 0 0 10px; }
+  .paper .cols p + p { text-indent: 1.2em; margin-top: -10px; }
+  .paper h2 { font-family: var(--serif); font-weight: 700; color: var(--color-heading); font-size: 15px; margin: 14px 0 4px; break-after: avoid; }
+  .paper .pull { break-inside: avoid; font-size: 17px; line-height: 1.4; color: var(--color-heading); border-left: 3px solid var(--color-border-control); padding: 4px 0 4px 16px; margin: 6px 0 16px; }
+  .paper .pull cite { display: block; font-size: 12.5px; font-style: normal; color: var(--color-text); margin-top: 4px; }
+  .paper .data { font-family: var(--serif); font-size: 12.5px; margin-top: auto; }
+  .paper .data th { font-family: var(--sans); font-size: 11.5px; }
+  .paper .foot { font-family: var(--sans); font-size: 10.5px; display: flex; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 8px; margin-top: 14px; gap: 12px; }
+  @media (max-width: 700px) {
+    .paper { aspect-ratio: auto; font-size: 15px; }
+    .paper .cols { columns: 1; }
+  }
+
+  /* side by side */
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); }
+  .spec { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: 16px 18px; }
+  .spec.on { box-shadow: inset 0 0 0 2px var(--color-accent); }
+  .spec .name { font-family: var(--font-text); font-size: 13px; font-size-adjust: none; display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .spec .name b { color: var(--color-heading); }
+  .spec .chars { font-size: 26px; line-height: 1.25; margin: 0 0 10px; }
+  .spec .body { font-size: 16px; margin: 0 0 8px; }
+  .spec .nums { font-size: 15px; margin: 0; font-variant-numeric: lining-nums tabular-nums; white-space: pre; overflow-x: auto; }
+  .spec .nums span { display: block; }
+
+  footer { text-align: center; font-size: 13px; padding: 24px 16px 40px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>Text typeface candidates</h1>
+    <p>A sans for online (website, interface, data) and a serif for print (flyers, datasheets, reports). Free fonts only, all under the SIL Open Font License, so they can be self-hosted and embedded in PDFs. Headlines stay in trackIT Systems. Sample texts are from our news posts; table values are sample data.</p>
+    <p>Belongs to <a href="../DESIGN.md">DESIGN.md</a> → Typography → Text typeface. Overview of the whole brand: <a href="index.html">preview/index.html</a>.</p>
+  </div>
+</header>
+
+<nav class="pick" aria-label="Candidate">
+  <div class="wrap" id="picker"><span class="label">Show pairing:</span>
+    <label class="adjust">Size: <select id="adjust">
+      <option value="none">Same font size</option>
+      <option value="balanced" selected>Balanced</option>
+      <option value="xheight">Same x-height</option>
+    </select></label>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="about" id="about"></div>
+
+    <section id="online">
+      <h2 class="sec">Online: <span data-sans-name></span></h2>
+      <p class="lead">A news post as on trackit.systems, with buttons, a slate-green card and a data table (tabular figures, right-aligned).</p>
+      <div class="web">
+        <div class="bar">
+          <img src="../assets/logo/trackit-logo-black.svg" alt="trackIT Systems" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'trackIT systems'}))">
+          <nav><a href="#online">Produkte</a><a href="#online">Projekte</a><a href="#online">News</a><a href="#online">Kontakt</a></nav>
+        </div>
+        <article>
+          <p class="meta">29. September 2026 · Projekte</p>
+          <h1>Warum sterben so viele Brachvogelküken?</h1>
+          <p class="intro">Der Brachvogel gehört zu den am stärksten bedrohten Wiesenbrütern Mitteleuropas. Seine Bestände gehen seit Jahren dramatisch zurück – vor allem, weil zu wenige Jungvögel das Erwachsenenalter erreichen.</p>
+          <h2>Das Dauertelemetrie-Projekt in Norddeutschland</h2>
+          <p>Um verschiedene Schutzmaßnahmen zu evaluieren, hat das Michael-Otto-Institut im NABU in der Eider-Treene-Sorge-Niederung in den Jahren 2024 und 2025 ein Forschungsprojekt durchgeführt. Dabei wurden insgesamt 65 Brachvogelküken mit Sendern ausgestattet, um ihr Schicksal lückenlos nachzuvollziehen.</p>
+          <p>Mit Systemen wie dem <a href="#online">vhf:tracker</a> lässt sich die Nachverfolgung automatisieren und zeitlich deutlich verdichten:</p>
+          <ul>
+            <li><strong>Kontinuierliche Erfassung:</strong> Bewegungen und Positionen der besenderten Tiere werden fortlaufend erfasst.</li>
+            <li><strong>Geringerer Einfluss der Beobachtung:</strong> Die stationären Empfangseinheiten erfassen die Tiere ohne wiederholte Anwesenheit von Personen im Untersuchungsgebiet.</li>
+            <li><em>Gezielte Kontrollen im Gelände:</em> Aktuelle Positionsdaten können aus der Ferne eingesehen werden.</li>
+          </ul>
+          <div class="scroll">
+            <table class="data">
+              <thead><tr><th>Station</th><th class="n">Detektionen</th><th class="n">Signal (dBm)</th><th class="n">Letzter Kontakt</th></tr></thead>
+              <tbody>
+                <tr><td>Nest 03</td><td class="n">18.411</td><td class="n">−71,4</td><td class="n">06:12:08</td></tr>
+                <tr><td>Wiese Nord</td><td class="n">7.096</td><td class="n">−88,0</td><td class="n">05:59:41</td></tr>
+                <tr><td>Graben Ost</td><td class="n">1.150</td><td class="n">−104,7</td><td class="n">04:37:19</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="caption">Beispieldaten.</p>
+          <div class="actions">
+            <button class="btn cta" type="button">Beratung anfragen</button>
+            <button class="btn sec" type="button">Zum vhf:tracker</button>
+            <button class="btn out" type="button">Alle News</button>
+          </div>
+          <div class="card">
+            <h3>Hessischer Gründerpreis 2024</h3>
+            <p>trackIT Systems wurde in der Kategorie „Gesellschaftliche Wirkung“ ausgezeichnet.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="print">
+      <h2 class="sec">Print: <span data-serif-name></span></h2>
+      <p class="lead">An A4 page: running text in two columns at about 10 pt, a pull quote, a table. Small labels (header, footer, table heads) use the sans, as they would in a datasheet.</p>
+      <div class="paper-wrap">
+        <div class="paper">
+          <div class="head">
+            <img src="../assets/logo/trackit-logo-black.svg" alt="trackIT Systems" onerror="this.replaceWith(Object.assign(document.createElement('b'),{textContent:'trackIT systems'}))">
+            <div class="kicker">Projektbericht<br>Wiesenbrüter 2024–2025</div>
+          </div>
+          <h1>Warum sterben so viele Brachvogelküken?</h1>
+          <p class="standfirst">Einblicke aus der Telemetrie-Forschung mit dem Michael-Otto-Institut im NABU.</p>
+          <div class="cols">
+            <p>Der Brachvogel gehört zu den am stärksten bedrohten Wiesenbrütern Mitteleuropas. Seine Bestände gehen seit Jahren dramatisch zurück – vor allem, weil zu wenige Jungvögel das Erwachsenenalter erreichen.</p>
+            <p>Maßnahmen wie der Schutz von Gelegen vor landwirtschaftlichen Eingriffen und der Einsatz von Elektrozäunen gegen Fressfeinde zeigen zwar Erfolge beim Schlupf – doch damit ist das Problem oft noch nicht gelöst.</p>
+            <h2>Das Dauertelemetrie-Projekt</h2>
+            <p>Um verschiedene Schutzmaßnahmen zu evaluieren und die Ursachen für den geringen Reproduktionserfolg zu verstehen, hat das Michael-Otto-Institut im NABU in der Eider-Treene-Sorge-Niederung in den Jahren 2024 und 2025 ein Forschungsprojekt durchgeführt. Dabei wurden insgesamt 65 Brachvogelküken mit Sendern ausgestattet.</p>
+            <p>Die automatische Radiotelemetrie mit dem <i>vhf:tracker</i> hat es ermöglicht, die Tiere vom Schlupf bis zum Flüggewerden zu verfolgen. Durch sekündliche Datenpunkte über Raumbewegungen und Verhalten konnten die ersten Flugversuche auf die Minute genau nachvollzogen werden.</p>
+            <blockquote class="pull">„Warum sterben trotz erfolgreichem Schlupf weiterhin so viele Küken?“<cite>Leitfrage des Projekts</cite></blockquote>
+            <p>Bewegungen und Positionen der besenderten Tiere werden fortlaufend erfasst. Dadurch lassen sich erste Flugbewegungen, das Ausbleiben weiterer Aktivität oder mögliche Todeszeitpunkte zeitlich genau eingrenzen.</p>
+            <p>Die stationären Empfangseinheiten erfassen die Tiere ohne wiederholte Anwesenheit von Personen im Untersuchungsgebiet. Feldkontrollen und die Suche nach vermissten Tieren lassen sich dadurch gezielter durchführen.</p>
+          </div>
+          <table class="data">
+            <thead><tr><th>Jahr</th><th class="n">Besenderte Küken</th><th class="n">Stationen</th><th class="n">Datenpunkte</th></tr></thead>
+            <tbody>
+              <tr><td>2024</td><td class="n">31</td><td class="n">12</td><td class="n">1.482.906</td></tr>
+              <tr><td>2025</td><td class="n">34</td><td class="n">14</td><td class="n">1.917.311</td></tr>
+            </tbody>
+          </table>
+          <div class="foot"><span>trackIT Systems GmbH · Marburg</span><span>Beispieldaten · Seite 1</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="compare">
+      <h2 class="sec">All candidates side by side</h2>
+      <p class="lead">German characters, quotes and dashes, a paragraph at reading size, and figures. The second line of figures uses tabular figures; the columns should line up.</p>
+      <div class="grid" id="grid"></div>
+    </section>
+  </div>
+</main>
+
+<footer>trackIT Systems brand repo · preview/text-fonts.html</footer>
+
+<script>
+const PAIRS = [
+  {
+    id: "alegreya", label: "Alegreya Sans + Alegreya",
+    sans: { family: "Alegreya Sans", semibold: 500, url: "https://fonts.google.com/specimen/Alegreya+Sans" },
+    serif: { family: "Alegreya", url: "https://fonts.google.com/specimen/Alegreya" },
+    about: "Warm and calligraphic, from the type foundry Huerta Tipográfica. The strongest \"nature / field guide\" character here. Made for literature, so long texts read well; on screen it looks smaller than the others and needs a larger font size. No semibold in the sans (500 is used for buttons here).",
+  },
+  {
+    id: "jost", label: "Jost + Spectral",
+    sans: { family: "Jost", semibold: 600, url: "https://fonts.google.com/specimen/Jost" },
+    serif: { family: "Spectral", url: "https://fonts.google.com/specimen/Spectral" },
+    about: "Minimalist and geometric. Jost follows Futura: circles and straight lines, a calm and classic look rather than a tech one. Spectral (Production Type) is a light, sharp serif with little ornament. Watch out: Jost is geometric like our display font, so headlines and text are less clearly separated than with the other pairings.",
+  },
+  {
+    id: "schibsted", label: "Schibsted Grotesk + Newsreader",
+    sans: { family: "Schibsted Grotesk", semibold: 600, url: "https://fonts.google.com/specimen/Schibsted+Grotesk" },
+    serif: { family: "Newsreader", url: "https://fonts.google.com/specimen/Newsreader" },
+    about: "Editorial. Schibsted Grotesk was made for the Norwegian media group Schibsted (Aftenposten, VG): a grotesk with some character, built for news sites. Newsreader (Production Type) is a newspaper serif with optical sizes; at large sizes it gets finer and more elegant, in small print sturdier. Two families, not designed as a pair.",
+  },
+  {
+    id: "libertinus", label: "Libertinus Sans + Libertinus Serif",
+    sans: { family: "Libertinus Sans", semibold: 700, url: "https://fonts.google.com/specimen/Libertinus+Sans" },
+    serif: { family: "Libertinus Serif", url: "https://fonts.google.com/specimen/Libertinus+Serif" },
+    about: "Academic. A continuation of Linux Libertine, known from the Wikipedia logo and widely used in LaTeX papers and theses. The serif is the strong part: classic book typography with many features (small caps, old-style figures, ligatures). The sans is plainer and only has regular and bold (bold is used for buttons here). Note: the German opening quote „ shows as a blank on this page. That is a fault in the Google Fonts build; the original release (github.com/alerque/libertinus) has the glyph, so we would self-host from there.",
+  },
+];
+
+const SAMPLE = "Die automatische Radiotelemetrie mit dem vhf:tracker hat es ermöglicht, die Tiere vom Schlupf bis zum Flüggewerden zu verfolgen – sekündlich, ohne Störung im Gelände.";
+const CHARS = "Äpfel, Öl, Übermaß – „Gründerpreis“ & ‚vhf:tracker‘ … 1–2 km · 5 °C · 99,5 %";
+const root = document.documentElement;
+const picker = document.getElementById("picker");
+const grid = document.getElementById("grid");
+
+function stack(f, kind) { return `"${f}", ${kind === "serif" ? "Georgia, serif" : "system-ui, sans-serif"}`; }
+
+let current;
+function select(id) {
+  const p = PAIRS.find(x => x.id === id) || PAIRS[0];
+  current = p.id;
+  root.style.setProperty("--sans", stack(p.sans.family, "sans"));
+  root.style.setProperty("--serif", stack(p.serif.family, "serif"));
+  root.style.setProperty("--sans-semibold", p.sans.semibold);
+  document.querySelectorAll("[data-sans-name]").forEach(el => el.textContent = p.sans.family);
+  document.querySelectorAll("[data-serif-name]").forEach(el => el.textContent = p.serif.family);
+  document.getElementById("about").innerHTML =
+    `<h3>${p.label}</h3><p>${p.about}</p><p class="note">Specimens: <a href="${p.sans.url}">${p.sans.family}</a>, <a href="${p.serif.url}">${p.serif.family}</a>. License: SIL Open Font License 1.1.</p>`;
+  picker.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === p.id)));
+  grid.querySelectorAll(".spec").forEach(s => s.classList.toggle("on", s.dataset.pair === p.id));
+  try { history.replaceState(null, "", "#" + p.id); } catch {}
+  sizeAdjust();
+}
+
+for (const p of PAIRS) {
+  const b = document.createElement("button");
+  b.type = "button"; b.dataset.id = p.id; b.textContent = p.label;
+  b.addEventListener("click", () => select(p.id));
+  picker.insertBefore(b, picker.querySelector(".adjust"));
+  for (const [kind, f] of [["sans", p.sans], ["serif", p.serif]]) {
+    const el = document.createElement("div");
+    el.className = "spec"; el.dataset.pair = p.id;
+    el.style.fontFamily = stack(f.family, kind);
+    el.dataset.family = f.family;
+    el.innerHTML = `<div class="name"><b>${f.family}</b><span>${kind === "sans" ? "online" : "print"}</span></div>
+      <p class="chars">${CHARS}</p>
+      <p class="body">${SAMPLE} <i>Kursiv: Numenius arquata.</i> <b>Fett: 65 Küken.</b></p>
+      <p class="nums"><span style="font-variant-numeric: normal">Standard  0123456789  11.111  88.888</span><span>Tabellen  0123456789  11.111  88.888</span></p>`;
+    grid.append(el);
+  }
+}
+
+// Size switch. "Same font size": every font at the same nominal size; fonts with a tall x-height look larger.
+// "Same x-height": lowercase letters equally tall; fonts with a small x-height and long ascenders then look larger.
+// "Balanced": half-way between the two (geometric mean), which is closest to how equal they look.
+// X-heights are measured in the browser from the loaded fonts.
+const TARGET_XH = 0.48;
+const xHeights = {};
+async function measure(family) {
+  if (!xHeights[family]) {
+    await document.fonts.load(`100px "${family}"`);
+    const ctx = document.createElement("canvas").getContext("2d");
+    ctx.font = `100px "${family}"`;
+    xHeights[family] = ctx.measureText("x").actualBoundingBoxAscent / 100;
+  }
+  return xHeights[family];
+}
+async function fsa(family) {
+  const xh = await measure(family);
+  if (adjust.value === "none") return "none";
+  return (adjust.value === "xheight" ? TARGET_XH : Math.sqrt(xh * TARGET_XH)).toFixed(3);
+}
+async function sizeAdjust() {
+  const p = PAIRS.find(x => x.id === current) || PAIRS[0];
+  root.style.setProperty("--sans-fsa", await fsa(p.sans.family));
+  root.style.setProperty("--serif-fsa", await fsa(p.serif.family));
+  for (const el of grid.querySelectorAll(".spec")) el.style.fontSizeAdjust = await fsa(el.dataset.family);
+}
+const adjust = document.getElementById("adjust");
+adjust.addEventListener("change", sizeAdjust);
+
+select(location.hash.slice(1));
+</script>
+</body>
+</html>
