@@ -60,6 +60,7 @@ Text on signal-orange is always dark-gray, never white ([ADR-0007](docs/adr/0007
 - Badges and tags are pills (`radius.pill`), e.g. the dark-green product badge.
 - Images are cropped round, with a slate-green ring.
 - Sharp-cornered containers do not mix with rounded ones.
+- Exception: an image that runs across the full width of the page (edge to edge, e.g. the opening image of a news post) has square corners. It is a band, not a container, and sits above or between the rounded content.
 
 ## Buttons
 
