@@ -14,6 +14,20 @@ icons:
   # - analysis platform      -> chart-dots / server
   # - annotation             -> tag / pencil
   # - contact, newsletter    -> mail
-  # - language switch        -> language
   # - external link          -> external-link
-  []
+
+  - id: language-switch
+    tabler: language
+    notes: Opens the language menu on the websites.
+
+  - id: close
+    tabler: x
+    notes: Closes a dialog or overlay, e.g. the image viewer.
+
+  - id: previous
+    tabler: chevron-left
+    notes: Previous item in a sequence, e.g. the previous image.
+
+  - id: next
+    tabler: chevron-right
+    notes: Next item in a sequence, e.g. the next image.
