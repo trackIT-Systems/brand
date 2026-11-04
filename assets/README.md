@@ -31,6 +31,8 @@ PNG exports in [logo/png/](logo/png/): the same four (transparent; lockup 1500×
 | Folder | Typeface | Use |
 |---|---|---|
 | [fonts/trackit-systems/](fonts/trackit-systems/) | trackIT Systems, Bold and Regular (OTF and WOFF2) | Our display font, selected cases only ([ADR-0009](../docs/adr/0009-own-font-trackit-systems.md)) |
+| [fonts/alegreya-sans/](fonts/alegreya-sans/) | Alegreya Sans, all 14 styles, Thin to Black with italics (TTF and WOFF2) | Text typeface for screens ([ADR-0011](../docs/adr/0011-text-typefaces-alegreya.md)) |
+| [fonts/alegreya/](fonts/alegreya/) | Alegreya, variable 400–900 with italic (TTF and WOFF2) | Text typeface for print ([ADR-0011](../docs/adr/0011-text-typefaces-alegreya.md)) |
 
 ## Icons
 
@@ -41,4 +43,3 @@ Tabler Icons, used from the official package, not copied here. [icons/icons.yml]
 TODO(Nicole):
 - White mark (for dark backgrounds) and an SVG favicon.
 - The logo files are pure black (`#000`); the styleguide names Dunkelgrau `#222222` as the logo color. Decide which is correct.
-- Text typeface for body and UI: not chosen yet. Only with a license that allows web embedding and self-hosting; put a `LICENSE` next to each family in `fonts/`.

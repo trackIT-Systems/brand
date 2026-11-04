@@ -30,4 +30,4 @@ trackIT Systems is based on a commercial font, modified with the permission of i
 - `font.family.display` is `trackIT Systems`.
 - The files here are copies: after a change in the font repo, copy the new build here.
 - Source files and the name of the original font stay out of this public repo; `.gitignore` blocks `source/` folders under `assets/fonts/`.
-- This leaves the text font (body text, UI, data) open.
+- The text typefaces (body text, UI, data) are Alegreya Sans and Alegreya ([ADR-0011](0011-text-typefaces-alegreya.md)).

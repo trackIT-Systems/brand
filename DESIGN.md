@@ -105,9 +105,25 @@ Typeset text does not replace the wordmark: the logo has its own letter-spacing 
 
 TODO(Nicole): list the cases (e.g. hero headlines, product names, flyer titles?).
 
-### Text typeface
+### Alegreya Sans and Alegreya: text typefaces
 
-TODO(Nicole): typeface for body text, UI and data (with tabular numerals), type scale, weights. The working draft does not specify one yet.
+Body text, UI and data use **Alegreya Sans** on screen and **Alegreya** in print ([ADR-0011](docs/adr/0011-text-typefaces-alegreya.md)). The two are one type system by Huerta Tipográfica, under the SIL Open Font License. Files and license: [assets/fonts/alegreya-sans/](assets/fonts/alegreya-sans/), [assets/fonts/alegreya/](assets/fonts/alegreya/).
+
+| Token | Family | Where |
+|---|---|---|
+| `font.family.text` | Alegreya Sans | Screens: websites, UI, data, running text online |
+| `font.family.serif` | Alegreya | Print: running text in datasheets, flyers and other documents |
+
+| Token | Weight | Use |
+|---|---|---|
+| `font.weight.text-regular` | 400 | Running text |
+| `font.weight.text-medium` | 500 | Between text and bold; Alegreya Sans has no semibold |
+| `font.weight.text-bold` | 700 | Headings and emphasis |
+
+- Alegreya Sans looks smaller than most sans fonts at the same size, so running text needs a slightly larger font size. The type scale should account for it.
+- Figures are old-style by default, which suits running text. Where many numbers appear (tables, data, measurements, prices, axis labels), use lining, tabular figures: `font-variant-numeric: lining-nums tabular-nums` ([ADR-0012](docs/adr/0012-lining-figures-for-numbers.md)).
+
+TODO(Nicole): type scale; button label weight (Medium 500 or Bold 700; `semibold` above falls back to Bold); headings in print (Alegreya Bold or Alegreya Sans Bold?).
 
 ## Layout and spacing
 

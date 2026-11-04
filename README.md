@@ -7,7 +7,7 @@ Scope is **brand identity / corporate design**. Product UI (dashboards, forms, t
 
 ## Preview
 
-[preview/index.html](preview/index.html) shows everything in this repo on one page: colors and roles, a contrast matrix, every logo on every background, the display font, buttons and shapes, icons, glossary, ADRs, and all open `TODO`s by owner. It reads the files at runtime, so it is always current, and styles itself with the generated tokens. Build them, serve the repo root and open it:
+[preview/index.html](preview/index.html) shows everything in this repo on one page: colors and roles, a contrast matrix, every logo on every background, the display and text fonts, buttons and shapes, icons, glossary, ADRs, and all open `TODO`s by owner. It reads the files at runtime, so it is always current, and styles itself with the generated tokens. Build them, serve the repo root and open it:
 
 ```sh
 npm install && npm run build
@@ -25,7 +25,7 @@ On every push to `main`, [.github/workflows/pages.yml](.github/workflows/pages.y
 | [glossary/terms.yml](glossary/terms.yml) | Canonical terms, banned alternatives, DE/EN pairs | draft: product names, tools, methods (32 terms) |
 | [examples/voice/](examples/voice/) | Real texts that show good and bad voice | 24 examples from trackit.systems and the newsletter (2026-11) |
 | [tokens/](tokens/) | Design tokens | colors and radii (draft) |
-| [assets/](assets/) | Logo, mark, favicon, fonts, icon map | logo, mark and display font in place |
+| [assets/](assets/) | Logo, mark, favicon, fonts, icon map | logo, mark, display and text fonts in place |
 | [docs/sources/](docs/sources/) | Working material the rules come from (e.g. Nicole's styleguide draft) | active |
 | [docs/adr/](docs/adr/) | Decision records for brand decisions | active |
 

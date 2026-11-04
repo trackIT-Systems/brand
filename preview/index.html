@@ -10,9 +10,27 @@
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <link rel="stylesheet" href="../dist/tokens.css">
 <style>
+  /* Text typefaces (ADR-0011), self-hosted from assets/fonts/ */
+  @font-face { font-family: "Alegreya Sans"; font-weight: 100; font-style: normal; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-Thin.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 100; font-style: italic; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-ThinItalic.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 300; font-style: normal; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-Light.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 300; font-style: italic; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-LightItalic.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 400; font-style: normal; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-Regular.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 400; font-style: italic; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-Italic.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 500; font-style: normal; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-Medium.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 500; font-style: italic; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-MediumItalic.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 700; font-style: normal; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-Bold.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 700; font-style: italic; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-BoldItalic.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 800; font-style: normal; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-ExtraBold.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 800; font-style: italic; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-ExtraBoldItalic.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 900; font-style: normal; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-Black.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya Sans"; font-weight: 900; font-style: italic; font-display: swap; src: url("../assets/fonts/alegreya-sans/woff2/AlegreyaSans-BlackItalic.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya"; font-weight: 400 900; font-style: normal; font-display: swap; src: url("../assets/fonts/alegreya/woff2/Alegreya%5Bwght%5D.woff2") format("woff2"); }
+  @font-face { font-family: "Alegreya"; font-weight: 400 900; font-style: italic; font-display: swap; src: url("../assets/fonts/alegreya/woff2/Alegreya-Italic%5Bwght%5D.woff2") format("woff2"); }
+
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--color-page-background); color: var(--color-text);
-    font: 16px/1.55 var(--font-text); }
+    font: 17px/1.55 var(--font-text); }
   a { color: var(--color-link); text-underline-offset: 2px; }
   p, li { text-wrap: pretty; }
   :focus-visible { outline: 3px solid var(--color-focus-ring); outline-offset: 2px; }
@@ -40,7 +58,7 @@
   .panel { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-control); padding: 16px; }
   .scroll { overflow-x: auto; }
   .scroll:has(> table):not(.bare) { border: 1px solid var(--color-border); border-radius: var(--radius-control); }
-  table { border-collapse: collapse; width: 100%; background: var(--color-surface); font-size: 14px; }
+  table { border-collapse: collapse; width: 100%; background: var(--color-surface); font-size: 15px; font-variant-numeric: lining-nums tabular-nums; }
   th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
   th { background: var(--color-surface-subtle); color: var(--color-text); font-weight: 600; }
   tbody tr:last-child > * { border-bottom: 0; }
@@ -85,6 +103,9 @@
   .type-spec .big { font-size: clamp(32px, 6vw, 56px); line-height: 1.1; overflow-wrap: anywhere; }
   .type-spec .mid { font-size: 24px; line-height: 1.25; margin-top: 8px; }
   .type-spec .small { font-size: 16px; margin-top: 8px; overflow-wrap: anywhere; }
+  .type-spec .body { font-size: 18px; margin-top: 8px; max-width: 68ch; }
+  .type-spec .nums { font-size: 18px; margin-top: 8px; display: grid; grid-template-columns: max-content max-content; gap: 2px 16px; }
+  .type-spec .nums .lab { font-size: 13px; align-self: center; }
 
   /* components */
   .card { background: var(--color-surface-card); color: var(--color-on-surface-card); border-radius: var(--radius-card); padding: 24px 28px; }
@@ -201,13 +222,13 @@
 
   <section id="type">
     <h2>Typography</h2>
-    <p class="lead">Display: our own font trackIT Systems in Bold and Regular (ADR-0009), for selected cases only. Files in assets/fonts/trackit-systems/. Text typeface not chosen yet (placeholder shown).</p>
+    <p class="lead">Display: our own font trackIT Systems in Bold and Regular (ADR-0009), for selected cases only. Text: Alegreya Sans on screen, Alegreya in print (ADR-0011); lining figures where many numbers appear (ADR-0012). This page is set in Alegreya Sans.</p>
     <div class="type-controls">
       <input type="text" id="type-sample" value="trackIT systems" aria-label="Sample text">
       <label><input type="checkbox" id="type-upper"> uppercase</label>
     </div>
     <div id="type-in-use"></div>
-    <p class="src">Source: <a href="../tokens/typography.tokens.json">tokens/typography.tokens.json</a>, <a href="../assets/fonts/trackit-systems/">assets/fonts/trackit-systems/</a></p>
+    <p class="src">Source: <a href="../tokens/typography.tokens.json">tokens/typography.tokens.json</a>, <a href="../assets/fonts/trackit-systems/">assets/fonts/trackit-systems/</a>, <a href="../assets/fonts/alegreya-sans/">assets/fonts/alegreya-sans/</a>, <a href="../assets/fonts/alegreya/">assets/fonts/alegreya/</a></p>
   </section>
 
   <section id="components">
@@ -419,7 +440,7 @@ async function loadType() {
   const t = await json('tokens/typography.tokens.json');
   const display = t.font.family.display.$value[0];
   // the display family as the web will use it: one family, weights from the tokens
-  const inUse = entries(t.font.weight).map(([k, v]) => ({ token: k, weight: v.$value, desc: v.$description,
+  const inUse = entries(t.font.weight).filter(([k]) => k.startsWith('display-')).map(([k, v]) => ({ token: k, weight: v.$value, desc: v.$description,
     file: `${display} ${v.$value >= 700 ? 'Bold' : 'Regular'}` }));
   for (const s of inUse) document.fonts.add(new FontFace(display, fontUrl(s.file), { weight: String(s.weight) }));
 
@@ -441,9 +462,22 @@ async function loadType() {
           el('div', { style: 'font-family:var(--font-display);line-height:1;text-align:right' },
             el('div', { style: 'font-weight:700;font-size:56px;letter-spacing:.028em' }, 'trackIT'),
             el('div', { style: 'font-weight:400;font-size:37px;letter-spacing:.04em' }, 'systems')))),
-      el('div', { class: 'type-spec' },
-        el('div', { class: 'meta' }, el('b', {}, 'Text typeface: placeholder'), ' · ', el('span', { class: 'mono' }, 'font.family.text'), ` · ${t.font.family.text.$description}`),
-        el('div', { class: 'small', style: 'margin-top:0' }, 'Body text, UI and data. Running text never uses the display face. 0123456789')));
+      ...['text', 'serif'].map((k) => {
+        const fam = t.font.family[k];
+        return el('div', { class: 'type-spec', style: `font-family:var(--font-${k})` },
+          el('div', { class: 'meta', style: 'font-family:var(--font-text)' },
+            el('b', {}, fam.$value[0]), ' · ', el('span', { class: 'mono' }, `font.family.${k}`), ` · ${fam.$description}`),
+          el('div', { class: 'mid', style: `font-weight:${t.font.weight['text-bold'].$value}` }, 'Akustisches Monitoring für Fledermäuse und Vögel'),
+          el('div', { class: 'body' }, 'Die automatische Radiotelemetrie mit dem vhf:tracker hat es ermöglicht, die Tiere vom Schlupf bis zum Flüggewerden zu verfolgen. ',
+            el('i', {}, 'Kursiv: Numenius arquata. '),
+            el('span', { style: `font-weight:${t.font.weight['text-medium'].$value}` }, 'Medium: 65 Küken. '),
+            el('b', {}, 'Bold: 1–2 km, 5 °C, 99,5 %.')),
+          el('div', { class: 'nums' },
+            el('span', { class: 'lab', style: 'font-family:var(--font-text)' }, 'default (old-style): running text'),
+            el('span', { style: 'font-variant-numeric:normal' }, '0123456789 · 11.111 · 88.888'),
+            el('span', { class: 'lab', style: 'font-family:var(--font-text)' }, 'lining-nums tabular-nums: tables, data'),
+            el('span', { style: 'font-variant-numeric:lining-nums tabular-nums' }, '0123456789 · 11.111 · 88.888')));
+      }));
   };
   $('#type-sample').addEventListener('input', render);
   $('#type-upper').addEventListener('change', render);

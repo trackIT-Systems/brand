@@ -7,14 +7,21 @@
         "$description": "Our display font; selected cases only, never running text. Files: assets/fonts/trackit-systems/ (ADR-0009)"
       },
       "text": {
-        "$value": ["system-ui", "-apple-system", "Segoe UI", "sans-serif"],
-        "$description": "Placeholder until the text typeface is chosen"
+        "$value": ["Alegreya Sans", "system-ui", "sans-serif"],
+        "$description": "Text typeface for screens: websites, UI, data. Files: assets/fonts/alegreya-sans/ (ADR-0011)"
+      },
+      "serif": {
+        "$value": ["Alegreya", "Georgia", "serif"],
+        "$description": "Text typeface for print: running text in datasheets, flyers, documents. Files: assets/fonts/alegreya/ (ADR-0011)"
       }
     },
     "weight": {
       "$type": "fontWeight",
       "display-bold": { "$value": 700, "$description": "trackIT Systems Bold, as in 'trackIT' of the wordmark" },
-      "display-regular": { "$value": 400, "$description": "trackIT Systems Regular, as in 'systems' of the wordmark" }
+      "display-regular": { "$value": 400, "$description": "trackIT Systems Regular, as in 'systems' of the wordmark" },
+      "text-regular": { "$value": 400, "$description": "Alegreya Sans / Alegreya Regular: running text" },
+      "text-medium": { "$value": 500, "$description": "Alegreya Sans / Alegreya Medium; Alegreya Sans has no semibold" },
+      "text-bold": { "$value": 700, "$description": "Alegreya Sans / Alegreya Bold: headings, emphasis" }
     }
   }
 }
